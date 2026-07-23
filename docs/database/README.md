@@ -4,7 +4,7 @@
 
 O Hidra é o único projeto com banco de dados. Migrations vivem em `hidra/database/migrations` e são a fonte executável do schema — este documento é a referência de leitura (diagrama, dicionário, decisões), não substitui as migrations.
 
-Argos, Farm, Hermes e Pluto não têm banco próprio de dados de negócio: tudo é consumido via API do Hidra (ver skill `arquitetura-ecossistema-granja`).
+Argos, Demeter, Hermes e Pluto não têm banco próprio de dados de negócio: tudo é consumido via API do Hidra (ver skill `arquitetura-ecossistema-granja`).
 
 ## Organização por contexto de domínio
 

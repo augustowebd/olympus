@@ -1,6 +1,6 @@
 ---
 name: cobertura-testes-unitarios
-description: Garantir cobertura de testes unitários para todo código gerado ou alterado nos projetos do ecossistema (Hidra, Argos, Farm, Hermes, Pluto). Use sempre que criar, alterar ou refatorar uma classe com lógica (Entity, Value Object, caso de uso, serviço, controller, componente) — antes de considerar a tarefa concluída.
+description: Garantir cobertura de testes unitários para todo código gerado ou alterado nos projetos do ecossistema (Hidra, Argos, Demeter, Hermes, Pluto). Use sempre que criar, alterar ou refatorar uma classe com lógica (Entity, Value Object, caso de uso, serviço, controller, componente) — antes de considerar a tarefa concluída.
 ---
 
 # Cobertura de Testes Unitários
@@ -23,7 +23,7 @@ Isento de teste dedicado:
 - **Infrastructure** (repositórios Eloquent, integrações): teste de integração (banco em memória/sqlite, `RefreshDatabase`) verificando persistência e mapeamento, não regra de negócio.
 - **Presentation** (controllers, requests, resources): teste de feature/endpoint (`assertStatus`, `assertJsonStructure`), validação de contrato HTTP e códigos de erro — não reexecutar regra de domínio.
 
-## O que testar nos clientes (Argos, Farm, Hermes, Pluto)
+## O que testar nos clientes (Argos, Demeter, Hermes, Pluto)
 
 - Testes de componente/apresentação e de tratamento de resposta do cliente HTTP (sucesso, erro, timeout).
 - Nunca reescrever nos clientes o teste da regra que já é testada no Hidra.

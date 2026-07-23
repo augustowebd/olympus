@@ -1,6 +1,6 @@
 ---
 name: arquitetura-ecossistema-granja
-description: Aplicar a arquitetura obrigatória dos projetos Hidra, Argos, Farm, Hermes e Pluto. Use ao criar, alterar, revisar ou refatorar código deste ecossistema, especialmente para decidir onde ficam regras de negócio, organizar camadas DDD, consumir a API Hidra e evitar valores mágicos.
+description: Aplicar a arquitetura obrigatória dos projetos Hidra, Argos, Demeter, Hermes e Pluto. Use ao criar, alterar, revisar ou refatorar código deste ecossistema, especialmente para decidir onde ficam regras de negócio, organizar camadas DDD, consumir a API Hidra e evitar valores mágicos.
 ---
 
 # Arquitetura do Ecossistema Granja
@@ -11,7 +11,7 @@ Esta skill define as regras obrigatórias para geração, alteração, revisão 
 
 - Hidra;
 - Argos;
-- Farm;
+- Demeter;
 - Hermes;
 - Pluto.
 
@@ -31,7 +31,7 @@ Antes de implementar qualquer funcionalidade:
 Toda regra de negócio deve estar centralizada no Hidra.
 
 ```text
-Argos, Farm, Hermes e Pluto apresentam e coletam dados.
+Argos, Demeter, Hermes e Pluto apresentam e coletam dados.
 Hidra decide, valida e executa o negócio.
 ```
 
@@ -53,19 +53,19 @@ Eles não podem implementar, duplicar ou reinterpretar regras de negócio.
 |---|---|---|
 | Hidra | Laravel API-only | API central e regras de negócio |
 | Argos | Laravel + Blade | Backoffice administrativo |
-| Farm | React Native | Operações cotidianas da granja |
+| Demeter | React Native | Operações cotidianas da granja |
 | Hermes | React Native | Operações de entrega |
 | Pluto | Laravel Web | Ponto de venda |
 
 ## Comunicação
 
 ```text
-Argos ─────┐
-Farm ──────┤
-Hermes ────┼──→ API Hidra ───→ Application ───→ Domain
-Pluto ─────┘                         │
-                                     ↓
-                              Infrastructure
+Argos   ─────┐
+Demeter ─────┤
+Hermes  ─────┼──→ API Hidra ───→ Application ───→ Domain
+Pluto   ─────┘                         │
+                                       ↓
+                                Infrastructure
 ```
 
 Não permitir:
@@ -1168,7 +1168,7 @@ Não pode:
 - reproduzir validações de domínio;
 - alterar estado sem chamar o Hidra.
 
-## Farm
+## Demeter
 
 React Native para operações da granja.
 
@@ -1253,7 +1253,7 @@ O Hidra é a fonte oficial de:
 - transições;
 - autorizações.
 
-Farm e Hermes podem operar offline de forma limitada:
+Demeter e Hermes podem operar offline de forma limitada:
 
 - dados locais são temporários;
 - comandos possuem identificador idempotente;
@@ -1377,7 +1377,7 @@ Não duplicar nos clientes os testes das regras internas do Hidra.
 
 # Comportamento obrigatório do agente
 
-Quando uma solicitação tentar colocar regra de negócio em Argos, Farm, Hermes ou Pluto, responda:
+Quando uma solicitação tentar colocar regra de negócio em Argos, Demeter, Hermes ou Pluto, responda:
 
 > Esta funcionalidade contém regra de negócio e deve ser implementada no Hidra. No projeto cliente será implementado apenas o consumo da API e o tratamento da resposta.
 
