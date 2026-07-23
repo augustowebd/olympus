@@ -14,6 +14,7 @@ use App\Domain\Producao\Repositories\GalpaoRepository;
 use App\Domain\Producao\Repositories\NucleoRepository;
 use App\Domain\Producao\ValueObjects\Capacidade;
 use App\Domain\Producao\ValueObjects\GalpaoId;
+use App\Domain\Producao\ValueObjects\Nome;
 use App\Domain\Producao\ValueObjects\NucleoId;
 use App\Domain\Producao\ValueObjects\Slug;
 
@@ -32,18 +33,19 @@ final readonly class RegistrarGalpao
         return $this->unidadeDeTrabalho->executar(
             function () use ($dto): Galpao {
                 $nucleoId = NucleoId::fromString($dto->nucleoId);
+                $nome = Nome::deTexto($dto->nome);
 
                 if ($this->nucleos->obterPorId($nucleoId) === null) {
                     throw new NucleoNaoEncontradoException();
                 }
 
-                if ($this->galpoes->existeComSlug(Slug::deTexto($dto->nome)->valor())) {
+                if ($this->galpoes->existeComSlug(Slug::deTexto($nome->valor())->valor())) {
                     throw new SlugDuplicadoException();
                 }
 
                 $galpao = Galpao::registrar(
                     id: GalpaoId::fromString($this->geradorIdentificador->gerar()),
-                    nome: $dto->nome,
+                    nome: $nome,
                     capacidade: Capacidade::deAves($dto->capacidade),
                     nucleoId: $nucleoId,
                 );

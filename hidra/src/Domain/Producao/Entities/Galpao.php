@@ -25,12 +25,10 @@ final readonly class Galpao
 
     public static function registrar(
         GalpaoId $id,
-        string $nome,
+        Nome $nome,
         Capacidade $capacidade,
         NucleoId $nucleoId,
     ): self {
-        $nome = Nome::deTexto($nome);
-
         return new self(
             id: $id,
             nome: $nome,

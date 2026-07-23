@@ -14,6 +14,7 @@ use App\Domain\Producao\Exceptions\NucleoNaoEncontradoException;
 use App\Domain\Producao\Exceptions\SlugDuplicadoException;
 use App\Domain\Producao\Repositories\GalpaoRepository;
 use App\Domain\Producao\Repositories\NucleoRepository;
+use App\Domain\Producao\ValueObjects\Nome;
 use App\Domain\Producao\ValueObjects\NucleoId;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +45,7 @@ final class RegistrarGalpaoTest extends TestCase
             nucleos: new class implements NucleoRepository {
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
-                    return Nucleo::registrar($id, 'Núcleo 1');
+                    return Nucleo::registrar($id, Nome::deTexto('Núcleo 1'));
                 }
             },
             unidadeDeTrabalho: new class implements UnidadeDeTrabalho {
@@ -131,7 +132,7 @@ final class RegistrarGalpaoTest extends TestCase
             nucleos: new class implements NucleoRepository {
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
-                    return Nucleo::registrar($id, 'Núcleo 1');
+                    return Nucleo::registrar($id, Nome::deTexto('Núcleo 1'));
                 }
             },
             unidadeDeTrabalho: new class implements UnidadeDeTrabalho {

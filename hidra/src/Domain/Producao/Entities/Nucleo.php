@@ -15,9 +15,9 @@ final readonly class Nucleo
     ) {
     }
 
-    public static function registrar(NucleoId $id, string $nome): self
+    public static function registrar(NucleoId $id, Nome $nome): self
     {
-        return new self($id, Nome::deTexto($nome));
+        return new self($id, $nome);
     }
 
     public function id(): NucleoId

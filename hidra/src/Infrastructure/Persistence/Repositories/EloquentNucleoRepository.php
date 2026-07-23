@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Producao\Entities\Nucleo;
 use App\Domain\Producao\Repositories\NucleoRepository;
+use App\Domain\Producao\ValueObjects\Nome;
 use App\Domain\Producao\ValueObjects\NucleoId;
 use App\Infrastructure\Persistence\Eloquent\Models\NucleoModel;
 
@@ -21,7 +22,7 @@ final class EloquentNucleoRepository implements NucleoRepository
 
         return Nucleo::registrar(
             id: NucleoId::fromString($model->ncl_uuid),
-            nome: $model->nome,
+            nome: Nome::deTexto($model->nome),
         );
     }
 }
