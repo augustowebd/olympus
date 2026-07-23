@@ -49,6 +49,98 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "Núcleo",
+          "item": [
+            {
+              "name": "Criar núcleo",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/nucleos",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "nucleos"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nome\": \"Núcleo Central\"\n}"
+                },
+                "description": "**O que faz**\nRegistra um novo núcleo — local físico onde galpões ficam localizados. Nome é único no ecossistema.\n\n**Permissão exigida**\n`demeter.nucleo.criar`\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório, único).\n\n**Resposta de sucesso — 201 Created**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Central\" } }\n```\n\n**Erros — 422**: `NOME_OBRIGATORIO`, `NUCLEO_NOME_DUPLICADO`.\n\n**401 Unauthorized** — sem token Sanctum válido."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar núcleos",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/nucleos",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "nucleos"]
+                },
+                "description": "**O que faz**\nLista todos os núcleos cadastrados, ordenados por nome.\n\n**Permissão exigida**\n`demeter.nucleo.listar`\n\n**Parâmetros**\nNenhum.\n\n**Resposta de sucesso — 200 OK**\n```json\n{ \"data\": [ { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Central\" } ] }\n```\n\n**401 Unauthorized** — sem token Sanctum válido.\n\n**Observações**\nSem paginação nesta versão — lista completa."
+              },
+              "response": []
+            },
+            {
+              "name": "Visualizar núcleo",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/nucleos/:ncl_uuid",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "nucleos", ":ncl_uuid"],
+                  "variable": [{ "key": "ncl_uuid", "value": "d8d1e9cb-a263-4a1c-985d-9082116a5247" }]
+                },
+                "description": "**O que faz**\nRetorna os dados de um núcleo específico.\n\n**Permissão exigida**\n`demeter.nucleo.visualizar`\n\n**Parâmetros (path)**\n- `ncl_uuid` (uuid, obrigatório) — identificador público do núcleo.\n\n**Resposta de sucesso — 200 OK**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Central\" } }\n```\n\n**Erro — 422**: `NUCLEO_NAO_ENCONTRADO`.\n\n**401 Unauthorized** — sem token Sanctum válido."
+              },
+              "response": []
+            },
+            {
+              "name": "Alterar núcleo",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/nucleos/:ncl_uuid",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "nucleos", ":ncl_uuid"],
+                  "variable": [{ "key": "ncl_uuid", "value": "d8d1e9cb-a263-4a1c-985d-9082116a5247" }]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nome\": \"Núcleo Renomeado\"\n}"
+                },
+                "description": "**O que faz**\nRenomeia um núcleo existente.\n\n**Permissão exigida**\n`demeter.nucleo.alterar`\n\n**Parâmetros (path)**\n- `ncl_uuid` (uuid, obrigatório).\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório).\n\n**Resposta de sucesso — 200 OK**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Renomeado\" } }\n```\n\n**Erros — 422**: `NUCLEO_NAO_ENCONTRADO`, `NOME_OBRIGATORIO`, `NUCLEO_NOME_DUPLICADO` (nome já usado por outro núcleo; manter o próprio nome não conta como duplicado).\n\n**401 Unauthorized** — sem token Sanctum válido."
+              },
+              "response": []
+            },
+            {
+              "name": "Remover núcleo",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Accept", "value": "application/json" }],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/nucleos/:ncl_uuid",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "nucleos", ":ncl_uuid"],
+                  "variable": [{ "key": "ncl_uuid", "value": "d8d1e9cb-a263-4a1c-985d-9082116a5247" }]
+                },
+                "description": "**O que faz**\nRemove um núcleo — só é possível se não houver nenhum galpão vinculado a ele.\n\n**Permissão exigida**\n`demeter.nucleo.remover`\n\n**Parâmetros (path)**\n- `ncl_uuid` (uuid, obrigatório).\n\n**Resposta de sucesso — 204 No Content**\n\n**Erros — 422**\n```json\n{ \"error\": { \"code\": \"NUCLEO_NAO_ENCONTRADO\", \"message\": \"O núcleo informado não foi encontrado.\" } }\n```\n```json\n{ \"error\": { \"code\": \"NUCLEO_EM_USO\", \"message\": \"O núcleo não pode ser removido porque há galpões vinculados a ele.\" } }\n```\n\n**401 Unauthorized** — sem token Sanctum válido."
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }

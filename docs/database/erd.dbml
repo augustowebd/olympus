@@ -62,7 +62,7 @@ TableGroup producao {
 Table producao.nucleos {
   id integer [pk, increment, note: 'uso interno, nunca exposto']
   ncl_uuid uuid [unique, not null, note: 'identificador público']
-  nome varchar [not null]
+  nome varchar [unique, not null]
   created_at timestamp
   updated_at timestamp
 
