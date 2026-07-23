@@ -1,0 +1,333 @@
+// Shared preview-only component implementations (mirrors components/*.jsx) so demo cards
+// render standalone without depending on the platform's generated design-system bundle.
+function Button({ children, variant = 'primary', size = 'md', icon, disabled, onClick, fullWidth }) {
+  const sizes = { md: { padding: '10px 20px', fontSize: 'var(--text-base)', minHeight: 'var(--tap-target-min)' }, sm: { padding: '8px 14px', fontSize: 'var(--text-sm)', minHeight: '40px' } };
+  const variants = {
+    primary: { background: 'var(--primary-600)', color: 'var(--text-on-primary)', border: '1px solid var(--primary-600)' },
+    secondary: { background: 'var(--bg-surface)', color: 'var(--text-primary)', border: '1px solid var(--border-default)' },
+    ghost: { background: 'transparent', color: 'var(--primary-600)', border: '1px solid transparent' },
+    danger: { background: 'var(--danger-500)', color: 'var(--text-on-primary)', border: '1px solid var(--danger-500)' },
+  };
+  const v = variants[variant] || variants.primary;
+  return (
+    <button onClick={disabled ? undefined : onClick} disabled={disabled} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'var(--font-sans)', fontWeight: 'var(--weight-semibold)', borderRadius: 'var(--radius-md)', cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.5 : 1, width: fullWidth ? '100%' : undefined, ...sizes[size], ...v }}>
+      {icon && <span aria-hidden="true">{icon}</span>}{children}
+    </button>
+  );
+}
+
+function formatDatePt(raw) {
+  const digits = raw.replace(/\D/g, '').slice(0, 8);
+  const parts = [];
+  if (digits.length > 0) parts.push(digits.slice(0, 2));
+  if (digits.length > 2) parts.push(digits.slice(2, 4));
+  if (digits.length > 4) parts.push(digits.slice(4, 8));
+  return parts.join('/');
+}
+
+function formatCurrencyPt(raw) {
+  const digits = raw.replace(/\D/g, '');
+  if (!digits) return '';
+  const num = parseInt(digits, 10) / 100;
+  return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function Input({ label, placeholder, value, onChange, type = 'text', helperText, error, icon, unit, required, disabled }) {
+  const isDate = type === 'date';
+  const isCurrency = type === 'currency';
+  const handleMaskedChange = (e) => {
+    if (!onChange) return;
+    const formatted = isDate ? formatDatePt(e.target.value) : formatCurrencyPt(e.target.value);
+    onChange({ ...e, target: { ...e.target, value: formatted } });
+  };
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--font-sans)', width: '100%' }}>
+      {label && <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--text-secondary)' }}>{label}{required && <span style={{ color: 'var(--danger-500)' }}> *</span>}</span>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: 'var(--tap-target-min)', padding: '0 14px', borderRadius: 'var(--radius-md)', border: `1px solid ${error ? 'var(--danger-500)' : 'var(--border-default)'}`, background: disabled ? 'var(--bg-sunken)' : 'var(--bg-surface)' }}>
+        {isCurrency && <span style={{ color: 'var(--text-muted)', fontSize: 'var(--text-base)' }}>R$</span>}
+        {icon && !isCurrency && <span aria-hidden="true" style={{ color: 'var(--text-muted)' }}>{icon}</span>}
+        {isDate || isCurrency ? (
+          <input type="text" inputMode={isDate ? 'numeric' : 'decimal'} placeholder={isDate ? 'dd/mm/aaaa' : (placeholder || '0,00')} value={value} onChange={handleMaskedChange} maxLength={isDate ? 10 : undefined} required={required} disabled={disabled} style={{ flex: 1, border: 'none', outline: 'none', fontSize: 'var(--text-base)', fontFamily: 'var(--font-sans)', color: disabled ? 'var(--text-secondary)' : 'var(--text-primary)', background: 'transparent', minHeight: 'var(--tap-target-min)' }} />
+        ) : (
+          <input type={type} placeholder={placeholder} value={value} onChange={onChange} required={required} disabled={disabled} style={{ flex: 1, border: 'none', outline: 'none', fontSize: 'var(--text-base)', fontFamily: 'var(--font-sans)', color: disabled ? 'var(--text-secondary)' : 'var(--text-primary)', background: 'transparent', minHeight: 'var(--tap-target-min)' }} />
+        )}
+        {unit && !isCurrency && <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{unit}</span>}
+      </div>
+      {(helperText || error) && <span style={{ fontSize: 'var(--text-xs)', color: error ? 'var(--danger-500)' : 'var(--text-muted)' }}>{error || helperText}</span>}
+    </label>
+  );
+}
+
+function Select({ label, value, onChange, options = [], placeholder = 'Selecione', required, disabled }) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--font-sans)', width: '100%' }}>
+      {label && <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--text-secondary)' }}>{label}{required && <span style={{ color: 'var(--danger-500)' }}> *</span>}</span>}
+      <select value={value} onChange={onChange} required={required} disabled={disabled} style={{ minHeight: 'var(--tap-target-min)', padding: '0 14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)', background: disabled ? 'var(--bg-sunken)' : 'var(--bg-surface)', fontSize: 'var(--text-base)', fontFamily: 'var(--font-sans)', color: disabled ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
+        <option value="" disabled>{placeholder}</option>
+        {options.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+      </select>
+    </label>
+  );
+}
+
+function Checkbox({ label, checked, onChange }) {
+  return (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-sans)', cursor: 'pointer', minHeight: '44px' }}>
+      <input type="checkbox" checked={checked} onChange={onChange} style={{ width: 22, height: 22, accentColor: 'var(--primary-600)' }} />
+      <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-primary)' }}>{label}</span>
+    </label>
+  );
+}
+
+function Switch({ label, checked, onChange }) {
+  return (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-sans)', cursor: 'pointer' }}>
+      <span onClick={() => onChange && onChange(!checked)} style={{ width: 44, height: 26, borderRadius: 'var(--radius-full)', background: checked ? 'var(--primary-600)' : 'var(--n-300)', position: 'relative' }}>
+        <span style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 20, height: 20, borderRadius: '50%', background: 'var(--bg-surface)', boxShadow: 'var(--shadow-sm)' }} />
+      </span>
+      {label && <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-primary)' }}>{label}</span>}
+    </label>
+  );
+}
+
+function Badge({ children, tone = 'neutral' }) {
+  const tones = {
+    neutral: { background: 'var(--n-100)', color: 'var(--n-700)' },
+    primary: { background: 'var(--primary-100)', color: 'var(--primary-700)' },
+    success: { background: 'var(--accent-100)', color: 'var(--accent-600)' },
+    warning: { background: 'var(--warning-100)', color: 'var(--warning-700)' },
+    danger: { background: 'var(--danger-100)', color: 'var(--danger-700)' },
+  };
+  return <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 12px', borderRadius: 'var(--radius-full)', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-semibold)', ...(tones[tone] || tones.neutral) }}>{children}</span>;
+}
+
+function Toast({ message, tone = 'info', onClose }) {
+  const tones = {
+    success: { border: 'var(--accent-500)', bg: 'var(--accent-50)', color: 'var(--accent-600)' },
+    warning: { border: 'var(--warning-500)', bg: 'var(--warning-100)', color: 'var(--warning-700)' },
+    danger: { border: 'var(--danger-500)', bg: 'var(--danger-100)', color: 'var(--danger-700)' },
+    info: { border: 'var(--primary-500)', bg: 'var(--primary-50)', color: 'var(--primary-700)' },
+  };
+  const t = tones[tone] || tones.info;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', borderRadius: 'var(--radius-md)', background: t.bg, borderLeft: `4px solid ${t.border}`, boxShadow: 'var(--shadow-md)', fontFamily: 'var(--font-sans)', maxWidth: 380 }}>
+      <span style={{ color: t.color, fontSize: 'var(--text-base)', fontWeight: 'var(--weight-medium)', flex: 1 }}>{message}</span>
+      {onClose && <button onClick={onClose} style={{ border: 'none', background: 'none', color: t.color, cursor: 'pointer', fontSize: 'var(--text-lg)' }}>×</button>}
+    </div>
+  );
+}
+
+function Icon({ name, size = 22, strokeWidth = 1.8, color = 'currentColor' }) {
+  const paths = {
+    dashboard: <React.Fragment><rect x="3" y="3" width="7.5" height="7.5" rx="1.5" /><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" /><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" /><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" /></React.Fragment>,
+    egg: <ellipse cx="12" cy="13" rx="7" ry="9" />,
+    animal: <React.Fragment><circle cx="11" cy="13" r="8" /><path d="M19 11l3-2-1 4" /></React.Fragment>,
+    feed: <React.Fragment><line x1="12" y1="3" x2="12" y2="21" /><line x1="12" y1="6" x2="7" y2="9" /><line x1="12" y1="6" x2="17" y2="9" /><line x1="12" y1="12" x2="7" y2="15" /><line x1="12" y1="12" x2="17" y2="15" /></React.Fragment>,
+    box: <React.Fragment><rect x="4" y="8" width="16" height="12" rx="1" /><line x1="4" y1="8" x2="12" y2="3" /><line x1="20" y1="8" x2="12" y2="3" /></React.Fragment>,
+    cart: <React.Fragment><rect x="4" y="6" width="15" height="9" rx="1" /><circle cx="8" cy="19" r="1.6" /><circle cx="16" cy="19" r="1.6" /></React.Fragment>,
+    truck: <React.Fragment><rect x="2" y="8" width="12" height="9" rx="1" /><rect x="14" y="11" width="7" height="6" rx="1" /><circle cx="7" cy="19" r="1.6" /><circle cx="17" cy="19" r="1.6" /></React.Fragment>,
+    dollar: <React.Fragment><circle cx="12" cy="12" r="9" /><line x1="12" y1="7" x2="12" y2="17" /><path d="M9.5 9.8c0-1.3 1.2-2.2 2.5-2.2s2.5.7 2.5 1.8-1.1 1.6-2.5 1.9-2.5.8-2.5 1.9 1.2 1.8 2.5 1.8 2.5-.9 2.5-2.2" /></React.Fragment>,
+    wrench: <React.Fragment><circle cx="6" cy="6" r="3" /><rect x="9.5" y="10.5" width="12" height="4" rx="1" transform="rotate(45 9.5 10.5)" /><circle cx="18" cy="18" r="3" /></React.Fragment>,
+    users: <React.Fragment><circle cx="9" cy="9" r="4" /><circle cx="16" cy="11" r="3.2" /><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" /><path d="M14 20c0-2.6 1.8-4.8 4.2-5.5" /></React.Fragment>,
+    chart: <React.Fragment><rect x="4" y="12" width="4" height="8" rx="0.5" /><rect x="10" y="7" width="4" height="13" rx="0.5" /><rect x="16" y="3" width="4" height="17" rx="0.5" /></React.Fragment>,
+    alert: <React.Fragment><path d="M12 3l10 18H2z" /><line x1="12" y1="10" x2="12" y2="14.5" /><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none" /></React.Fragment>,
+    eye: <React.Fragment><path d="M2 12c2.5-5 7-8 10-8s7.5 3 10 8c-2.5 5-7 8-10 8s-7.5-3-10-8z" /><circle cx="12" cy="12" r="3" /></React.Fragment>,
+    edit: <React.Fragment><path d="M4 20l1-4.5L15.5 5 19 8.5 8.5 19z" /><line x1="13" y1="7" x2="17" y2="10.5" /></React.Fragment>,
+    power: <React.Fragment><line x1="12" y1="3" x2="12" y2="11" /><path d="M6.5 6.5a8 8 0 1 0 11 0" /></React.Fragment>,
+    trash: <React.Fragment><line x1="4" y1="7" x2="20" y2="7" /><path d="M6 7l1 13h10l1-13" /><line x1="9.5" y1="3.5" x2="14.5" y2="3.5" /><line x1="9.5" y1="3.5" x2="9.5" y2="7" /><line x1="14.5" y1="3.5" x2="14.5" y2="7" /></React.Fragment>,
+    file: <React.Fragment><path d="M6 2h9l3 3v17H6z" /><path d="M15 2v3h3" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="15" y2="16" /></React.Fragment>,
+    info: <React.Fragment><circle cx="12" cy="12" r="9" /><line x1="12" y1="11" x2="12" y2="16" /><circle cx="12" cy="7.5" r="0.9" fill="currentColor" stroke="none" /></React.Fragment>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
+}
+
+function BarChart({ data, height = 160, color = 'var(--primary-500)' }) {
+  const max = Math.max(...data.map((d) => d.value));
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 20, height, padding: '0 8px' }}>
+      {data.map((d) => (
+        <div key={d.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flex: 1 }}>
+          <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600 }}>{d.value.toLocaleString('pt-BR')}</span>
+          <div style={{ width: '100%', maxWidth: 48, height: Math.max(6, Math.round((d.value / max) * (height - 40))), background: color, borderRadius: '6px 6px 0 0' }} />
+          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{d.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function LineChart({ days, series, height = 200 }) {
+  const width = 600;
+  const padTop = 26, padBottom = 26, padX = 10;
+  const plotH = height - padTop - padBottom;
+  const plotW = width - padX * 2;
+  const allValues = series.flatMap((s) => s.values);
+  const max = Math.max(...allValues);
+  const min = Math.min(...allValues);
+  const range = Math.max(1, max - min);
+  const stepX = plotW / (days.length - 1);
+
+  const pointsFor = (values) => values.map((v, i) => {
+    const x = padX + i * stepX;
+    const y = padTop + plotH - ((v - min) / range) * plotH;
+    return { x, y };
+  });
+
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: 16, marginBottom: 12 }}>
+        {series.map((s) => (
+          <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ width: 10, height: 10, borderRadius: 2, background: s.color, display: 'inline-block' }} />
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.label}</span>
+          </div>
+        ))}
+      </div>
+      <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ display: 'block', overflow: 'visible' }}>
+        {series.map((s) => {
+          const pts = pointsFor(s.values);
+          const path = pts.map((p) => `${p.x},${p.y}`).join(' ');
+          return (
+            <React.Fragment key={s.label}>
+              <polyline points={path} fill="none" stroke={s.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              {pts.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3" fill={s.color} />)}
+              {pts.map((p, i) => {
+                if (i === 0) return null;
+                const diff = s.values[i] - s.values[i - 1];
+                if (diff === 0) return null;
+                const up = diff > 0;
+                return (
+                  <text key={`d${i}`} x={p.x} y={p.y - 10} textAnchor="middle" fontSize="9.5" fontFamily="var(--font-sans)" fontWeight="600" fill={up ? 'var(--accent-600)' : 'var(--danger-500)'}>
+                    {up ? '+' : ''}{diff}
+                  </text>
+                );
+              })}
+            </React.Fragment>
+          );
+        })}
+      </svg>
+      <div style={{ display: 'flex', padding: `0 ${padX}px` }}>
+        {days.map((day) => (
+          <span key={day} style={{ flex: 1, textAlign: 'center', fontSize: 11, color: 'var(--text-muted)' }}>{day}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GroupedBarChart({ days, series, height = 200 }) {
+  const max = Math.max(...series.flatMap((s) => s.values));
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: 16, marginBottom: 12 }}>
+        {series.map((s) => (
+          <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ width: 10, height: 10, borderRadius: 2, background: s.color, display: 'inline-block' }} />
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.label}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, height, padding: '0 4px' }}>
+        {days.map((day, i) => (
+          <div key={day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: height - 26 }}>
+              {series.map((s) => (
+                <div key={s.label} title={`${s.label}: ${s.values[i].toLocaleString('pt-BR')}`} style={{ width: 12, height: Math.max(4, Math.round((s.values[i] / max) * (height - 26))), background: s.color, borderRadius: '3px 3px 0 0' }} />
+              ))}
+            </div>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{day}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AlertItem({ level, message }) {
+  const cfg = {
+    aviso: { color: 'var(--primary-600)', bg: 'var(--primary-50)', icon: 'info', label: 'Aviso' },
+    atencao: { color: 'var(--warning-700)', bg: 'var(--warning-100)', icon: 'alert', label: 'Atenção' },
+    critico: { color: 'var(--danger-500)', bg: 'var(--danger-100)', icon: 'alert', label: 'Crítico' },
+  }[level];
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', borderRadius: 'var(--radius-md)', background: cfg.bg }}>
+      <span style={{ color: cfg.color, flexShrink: 0, marginTop: 1 }}><Icon name={cfg.icon} size={18} /></span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-semibold)', color: cfg.color, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{cfg.label}</span>
+        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>{message}</span>
+      </div>
+    </div>
+  );
+}
+
+function NavItem({ icon, label, active, onClick, badge }) {
+  return (
+    <button onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%', padding: '14px 18px', border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer', textAlign: 'left', background: active ? 'var(--primary-50)' : 'transparent', color: active ? 'var(--primary-700)' : 'var(--n-700)', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-base)', fontWeight: active ? 'var(--weight-semibold)' : 'var(--weight-medium)' }}>
+      <span aria-hidden="true" style={{ fontSize: 22, width: 28, textAlign: 'center' }}>{icon}</span>
+      <span style={{ flex: 1 }}>{label}</span>
+      {badge && <span style={{ background: 'var(--danger-500)', color: '#fff', fontSize: 11, fontWeight: 700, borderRadius: 'var(--radius-full)', padding: '2px 8px' }}>{badge}</span>}
+    </button>
+  );
+}
+
+function Sidebar({ items, activeId, onSelect, farmName }) {
+  return (
+    <nav style={{ width: 260, background: 'var(--bg-surface)', borderRight: '1px solid var(--border-subtle)', height: '100%', display: 'flex', flexDirection: 'column', padding: 'var(--space-4)', gap: 4, boxSizing: 'border-box' }}>
+      <div style={{ fontFamily: 'var(--font-sans)', fontWeight: 'var(--weight-extrabold)', fontSize: 'var(--text-md)', color: 'var(--primary-700)', padding: '10px 12px 20px' }}>{farmName || 'Granja ERP'}</div>
+      {items.map((it) => <NavItem key={it.id} icon={it.icon} label={it.label} badge={it.badge} active={it.id === activeId} onClick={() => onSelect && onSelect(it.id)} />)}
+    </nav>
+  );
+}
+
+function Tabs({ tabs, activeId, onChange }) {
+  return (
+    <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--border-subtle)', fontFamily: 'var(--font-sans)' }}>
+      {tabs.map((t) => (
+        <button key={t.id} onClick={() => onChange && onChange(t.id)} style={{ border: 'none', background: 'none', cursor: 'pointer', padding: '14px 18px', fontSize: 'var(--text-base)', fontWeight: t.id === activeId ? 'var(--weight-semibold)' : 'var(--weight-medium)', color: t.id === activeId ? 'var(--primary-700)' : 'var(--text-secondary)', borderBottom: t.id === activeId ? '2px solid var(--primary-600)' : '2px solid transparent', marginBottom: -1 }}>{t.label}</button>
+      ))}
+    </div>
+  );
+}
+
+function StatCard({ label, value, unit, delta, icon }) {
+  const deltaColor = delta && delta.startsWith('-') ? 'var(--danger-500)' : 'var(--accent-600)';
+  return (
+    <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', padding: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 8, fontFamily: 'var(--font-sans)', minWidth: 180 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)' }}>{icon && <span aria-hidden="true">{icon}</span>}{label}</div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+        <span style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-extrabold)', color: 'var(--text-primary)' }}>{value}</span>
+        {unit && <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{unit}</span>}
+      </div>
+      {delta && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-semibold)', color: deltaColor }}>{delta}</span>}
+    </div>
+  );
+}
+
+function Table({ columns, rows }) {
+  return (
+    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', fontFamily: 'var(--font-sans)' }}>
+      <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead><tr style={{ background: 'var(--bg-sunken)' }}>{columns.map((c) => <th key={c.key} style={{ textAlign: c.align || 'left', padding: '10px 16px', fontSize: 'var(--text-xs)', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-secondary)', fontWeight: 'var(--weight-semibold)', whiteSpace: 'nowrap' }}>{c.label}</th>)}</tr></thead>
+        <tbody>{rows.map((r, i) => <tr key={i} style={{ borderTop: '1px solid var(--border-subtle)', background: i % 2 === 0 ? 'var(--bg-surface)' : 'var(--bg-page)' }}>{columns.map((c) => <td key={c.key} style={{ padding: '9px 16px', fontSize: 'var(--text-base)', color: 'var(--text-primary)', whiteSpace: 'nowrap', textAlign: c.align || 'left' }}>{r[c.key]}</td>)}</tr>)}</tbody>
+      </table>
+      </div>
+    </div>
+  );
+}
+
+function Dialog({ open, title, children, onClose, actions, width = 420 }) {
+  if (!open) return null;
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'oklch(20% 0.02 250 / 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+      <div style={{ background: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', padding: 'var(--space-6)', width, maxWidth: '90vw', fontFamily: 'var(--font-sans)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <h2 style={{ margin: 0, fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)' }}>{title}</h2>
+          <button onClick={onClose} style={{ border: 'none', background: 'none', fontSize: 'var(--text-lg)', cursor: 'pointer', color: 'var(--text-muted)' }}>×</button>
+        </div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-normal)' }}>{children}</div>
+        {actions && <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24 }}>{actions}</div>}
+      </div>
+    </div>
+  );
+}

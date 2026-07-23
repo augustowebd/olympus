@@ -1,0 +1,192 @@
+<!-- @dsCard group="Components" viewport="700x380" name="Overlay" subtitle="Dialog" -->
+<!DOCTYPE html>
+<html><head><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="margin:0;background:var(--bg-page);font-family:var(--font-sans)">
+<div id="root"></div>
+<script type="text/jsx-source" id="__jsx_src">
+// Shared preview-only component implementations (mirrors components/*.jsx) so demo cards
+// render standalone without depending on the platform's generated design-system bundle.
+function Button({ children, variant = 'primary', size = 'md', icon, disabled, onClick, fullWidth }) {
+  const sizes = { md: { padding: '10px 20px', fontSize: 'var(--text-base)', minHeight: 'var(--tap-target-min)' }, sm: { padding: '8px 14px', fontSize: 'var(--text-sm)', minHeight: '40px' } };
+  const variants = {
+    primary: { background: 'var(--primary-600)', color: 'var(--text-on-primary)', border: '1px solid var(--primary-600)' },
+    secondary: { background: 'var(--bg-surface)', color: 'var(--text-primary)', border: '1px solid var(--border-default)' },
+    ghost: { background: 'transparent', color: 'var(--primary-600)', border: '1px solid transparent' },
+    danger: { background: 'var(--danger-500)', color: 'var(--text-on-primary)', border: '1px solid var(--danger-500)' },
+  };
+  const v = variants[variant] || variants.primary;
+  return (
+    <button onClick={disabled ? undefined : onClick} disabled={disabled} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'var(--font-sans)', fontWeight: 'var(--weight-semibold)', borderRadius: 'var(--radius-md)', cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.5 : 1, width: fullWidth ? '100%' : undefined, ...sizes[size], ...v }}>
+      {icon && <span aria-hidden="true">{icon}</span>}{children}
+    </button>
+  );
+}
+
+function Input({ label, placeholder, value, onChange, type = 'text', helperText, error, icon, unit }) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--font-sans)', width: '100%' }}>
+      {label && <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--text-secondary)' }}>{label}</span>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: 'var(--tap-target-min)', padding: '0 14px', borderRadius: 'var(--radius-md)', border: `1px solid ${error ? 'var(--danger-500)' : 'var(--border-default)'}`, background: 'var(--bg-surface)' }}>
+        {icon && <span aria-hidden="true" style={{ color: 'var(--text-muted)' }}>{icon}</span>}
+        <input type={type} placeholder={placeholder} value={value} onChange={onChange} style={{ flex: 1, border: 'none', outline: 'none', fontSize: 'var(--text-base)', fontFamily: 'var(--font-sans)', color: 'var(--text-primary)', background: 'transparent', minHeight: 'var(--tap-target-min)' }} />
+        {unit && <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{unit}</span>}
+      </div>
+      {(helperText || error) && <span style={{ fontSize: 'var(--text-xs)', color: error ? 'var(--danger-500)' : 'var(--text-muted)' }}>{error || helperText}</span>}
+    </label>
+  );
+}
+
+function Select({ label, value, onChange, options = [], placeholder = 'Selecionar' }) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--font-sans)', width: '100%' }}>
+      {label && <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--text-secondary)' }}>{label}</span>}
+      <select value={value} onChange={onChange} style={{ minHeight: 'var(--tap-target-min)', padding: '0 14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)', background: 'var(--bg-surface)', fontSize: 'var(--text-base)', fontFamily: 'var(--font-sans)', color: 'var(--text-primary)' }}>
+        <option value="" disabled>{placeholder}</option>
+        {options.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+      </select>
+    </label>
+  );
+}
+
+function Checkbox({ label, checked, onChange }) {
+  return (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-sans)', cursor: 'pointer', minHeight: '44px' }}>
+      <input type="checkbox" checked={checked} onChange={onChange} style={{ width: 22, height: 22, accentColor: 'var(--primary-600)' }} />
+      <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-primary)' }}>{label}</span>
+    </label>
+  );
+}
+
+function Switch({ label, checked, onChange }) {
+  return (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-sans)', cursor: 'pointer' }}>
+      <span onClick={() => onChange && onChange(!checked)} style={{ width: 44, height: 26, borderRadius: 'var(--radius-full)', background: checked ? 'var(--primary-600)' : 'var(--n-300)', position: 'relative' }}>
+        <span style={{ position: 'absolute', top: 3, left: checked ? 21 : 3, width: 20, height: 20, borderRadius: '50%', background: 'var(--bg-surface)', boxShadow: 'var(--shadow-sm)' }} />
+      </span>
+      {label && <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-primary)' }}>{label}</span>}
+    </label>
+  );
+}
+
+function Badge({ children, tone = 'neutral' }) {
+  const tones = {
+    neutral: { background: 'var(--n-100)', color: 'var(--n-700)' },
+    primary: { background: 'var(--primary-100)', color: 'var(--primary-700)' },
+    success: { background: 'var(--accent-100)', color: 'var(--accent-600)' },
+    warning: { background: 'var(--warning-100)', color: 'var(--warning-700)' },
+    danger: { background: 'var(--danger-100)', color: 'var(--danger-700)' },
+  };
+  return <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 12px', borderRadius: 'var(--radius-full)', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-semibold)', ...(tones[tone] || tones.neutral) }}>{children}</span>;
+}
+
+function Toast({ message, tone = 'info', onClose }) {
+  const tones = {
+    success: { border: 'var(--accent-500)', bg: 'var(--accent-50)', color: 'var(--accent-600)' },
+    warning: { border: 'var(--warning-500)', bg: 'var(--warning-100)', color: 'var(--warning-700)' },
+    danger: { border: 'var(--danger-500)', bg: 'var(--danger-100)', color: 'var(--danger-700)' },
+    info: { border: 'var(--primary-500)', bg: 'var(--primary-50)', color: 'var(--primary-700)' },
+  };
+  const t = tones[tone] || tones.info;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', borderRadius: 'var(--radius-md)', background: t.bg, borderLeft: `4px solid ${t.border}`, boxShadow: 'var(--shadow-md)', fontFamily: 'var(--font-sans)', maxWidth: 380 }}>
+      <span style={{ color: t.color, fontSize: 'var(--text-base)', fontWeight: 'var(--weight-medium)', flex: 1 }}>{message}</span>
+      {onClose && <button onClick={onClose} style={{ border: 'none', background: 'none', color: t.color, cursor: 'pointer', fontSize: 'var(--text-lg)' }}>×</button>}
+    </div>
+  );
+}
+
+function NavItem({ icon, label, active, onClick, badge }) {
+  return (
+    <button onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%', padding: '14px 18px', border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer', textAlign: 'left', background: active ? 'var(--primary-50)' : 'transparent', color: active ? 'var(--primary-700)' : 'var(--n-700)', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-base)', fontWeight: active ? 'var(--weight-semibold)' : 'var(--weight-medium)' }}>
+      <span aria-hidden="true" style={{ fontSize: 22, width: 28, textAlign: 'center' }}>{icon}</span>
+      <span style={{ flex: 1 }}>{label}</span>
+      {badge && <span style={{ background: 'var(--danger-500)', color: '#fff', fontSize: 11, fontWeight: 700, borderRadius: 'var(--radius-full)', padding: '2px 8px' }}>{badge}</span>}
+    </button>
+  );
+}
+
+function Sidebar({ items, activeId, onSelect, farmName }) {
+  return (
+    <nav style={{ width: 260, background: 'var(--bg-surface)', borderRight: '1px solid var(--border-subtle)', height: '100%', display: 'flex', flexDirection: 'column', padding: 'var(--space-4)', gap: 4, boxSizing: 'border-box' }}>
+      <div style={{ fontFamily: 'var(--font-sans)', fontWeight: 'var(--weight-extrabold)', fontSize: 'var(--text-md)', color: 'var(--primary-700)', padding: '10px 12px 20px' }}>{farmName || 'Granja ERP'}</div>
+      {items.map((it) => <NavItem key={it.id} icon={it.icon} label={it.label} badge={it.badge} active={it.id === activeId} onClick={() => onSelect && onSelect(it.id)} />)}
+    </nav>
+  );
+}
+
+function Tabs({ tabs, activeId, onChange }) {
+  return (
+    <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--border-subtle)', fontFamily: 'var(--font-sans)' }}>
+      {tabs.map((t) => (
+        <button key={t.id} onClick={() => onChange && onChange(t.id)} style={{ border: 'none', background: 'none', cursor: 'pointer', padding: '14px 18px', fontSize: 'var(--text-base)', fontWeight: t.id === activeId ? 'var(--weight-semibold)' : 'var(--weight-medium)', color: t.id === activeId ? 'var(--primary-700)' : 'var(--text-secondary)', borderBottom: t.id === activeId ? '2px solid var(--primary-600)' : '2px solid transparent', marginBottom: -1 }}>{t.label}</button>
+      ))}
+    </div>
+  );
+}
+
+function StatCard({ label, value, unit, delta, icon }) {
+  const deltaColor = delta && delta.startsWith('-') ? 'var(--danger-500)' : 'var(--accent-600)';
+  return (
+    <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', padding: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 8, fontFamily: 'var(--font-sans)', minWidth: 180 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)' }}>{icon && <span aria-hidden="true">{icon}</span>}{label}</div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+        <span style={{ fontSize: 'var(--text-2xl)', fontWeight: 'var(--weight-extrabold)', color: 'var(--text-primary)' }}>{value}</span>
+        {unit && <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{unit}</span>}
+      </div>
+      {delta && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'var(--weight-semibold)', color: deltaColor }}>{delta}</span>}
+    </div>
+  );
+}
+
+function Table({ columns, rows }) {
+  return (
+    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', fontFamily: 'var(--font-sans)' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead><tr style={{ background: 'var(--bg-sunken)' }}>{columns.map((c) => <th key={c.key} style={{ textAlign: 'left', padding: '12px 16px', fontSize: 'var(--text-xs)', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-secondary)', fontWeight: 'var(--weight-semibold)' }}>{c.label}</th>)}</tr></thead>
+        <tbody>{rows.map((r, i) => <tr key={i} style={{ borderTop: '1px solid var(--border-subtle)' }}>{columns.map((c) => <td key={c.key} style={{ padding: '14px 16px', fontSize: 'var(--text-base)', color: 'var(--text-primary)' }}>{r[c.key]}</td>)}</tr>)}</tbody>
+      </table>
+    </div>
+  );
+}
+
+function Dialog({ open, title, children, onClose, actions }) {
+  if (!open) return null;
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'oklch(20% 0.02 250 / 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+      <div style={{ background: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)', padding: 'var(--space-6)', width: 420, fontFamily: 'var(--font-sans)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <h2 style={{ margin: 0, fontSize: 'var(--text-lg)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)' }}>{title}</h2>
+          <button onClick={onClose} style={{ border: 'none', background: 'none', fontSize: 'var(--text-lg)', cursor: 'pointer', color: 'var(--text-muted)' }}>×</button>
+        </div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-base)', lineHeight: 'var(--leading-normal)' }}>{children}</div>
+        {actions && <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24 }}>{actions}</div>}
+      </div>
+    </div>
+  );
+}
+
+function Demo(){
+  return (
+    <div style={{position:'relative',height:340}}>
+      <Dialog open={true} title="Excluir lote?" actions={<><Button variant="secondary">Cancelar</Button><Button variant="danger">Excluir</Button></>}>
+        Esta ação não pode ser desfeita. O lote L-042 será removido permanentemente.
+      </Dialog>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+<script>
+(function(){
+  var src = document.getElementById('__jsx_src').textContent;
+  var out = Babel.transform(src, {presets: [['react', {runtime: 'classic'}]]}).code;
+  var s = document.createElement('script');
+  s.textContent = out;
+  document.body.appendChild(s);
+})();
+</script>
+</body></html>

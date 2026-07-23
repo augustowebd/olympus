@@ -1,0 +1,52 @@
+<!-- @dsCard group="Components" viewport="700x320" name="Icons" subtitle="Line icon set — replaces emoji" -->
+<!DOCTYPE html>
+<html><head><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="margin:0;background:var(--bg-page);font-family:var(--font-sans)">
+<div id="root"></div>
+<script type="text/jsx-source" id="__jsx_src">
+function Icon({ name, size = 22, strokeWidth = 1.8, color = 'currentColor' }) {
+  const paths = {
+    dashboard: <React.Fragment><rect x="3" y="3" width="7.5" height="7.5" rx="1.5" /><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" /><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" /><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" /></React.Fragment>,
+    egg: <ellipse cx="12" cy="13" rx="7" ry="9" />,
+    animal: <React.Fragment><circle cx="11" cy="13" r="8" /><path d="M19 11l3-2-1 4" /></React.Fragment>,
+    feed: <React.Fragment><line x1="12" y1="3" x2="12" y2="21" /><line x1="12" y1="6" x2="7" y2="9" /><line x1="12" y1="6" x2="17" y2="9" /><line x1="12" y1="12" x2="7" y2="15" /><line x1="12" y1="12" x2="17" y2="15" /></React.Fragment>,
+    box: <React.Fragment><rect x="4" y="8" width="16" height="12" rx="1" /><line x1="4" y1="8" x2="12" y2="3" /><line x1="20" y1="8" x2="12" y2="3" /></React.Fragment>,
+    cart: <React.Fragment><rect x="4" y="6" width="15" height="9" rx="1" /><circle cx="8" cy="19" r="1.6" /><circle cx="16" cy="19" r="1.6" /></React.Fragment>,
+    truck: <React.Fragment><rect x="2" y="8" width="12" height="9" rx="1" /><rect x="14" y="11" width="7" height="6" rx="1" /><circle cx="7" cy="19" r="1.6" /><circle cx="17" cy="19" r="1.6" /></React.Fragment>,
+    dollar: <React.Fragment><circle cx="12" cy="12" r="9" /><line x1="12" y1="7" x2="12" y2="17" /><path d="M9.5 9.8c0-1.3 1.2-2.2 2.5-2.2s2.5.7 2.5 1.8-1.1 1.6-2.5 1.9-2.5.8-2.5 1.9 1.2 1.8 2.5 1.8 2.5-.9 2.5-2.2" /></React.Fragment>,
+    wrench: <React.Fragment><circle cx="6" cy="6" r="3" /><rect x="9.5" y="10.5" width="12" height="4" rx="1" transform="rotate(45 9.5 10.5)" /><circle cx="18" cy="18" r="3" /></React.Fragment>,
+    users: <React.Fragment><circle cx="9" cy="9" r="4" /><circle cx="16" cy="11" r="3.2" /><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" /><path d="M14 20c0-2.6 1.8-4.8 4.2-5.5" /></React.Fragment>,
+    chart: <React.Fragment><rect x="4" y="12" width="4" height="8" rx="0.5" /><rect x="10" y="7" width="4" height="13" rx="0.5" /><rect x="16" y="3" width="4" height="17" rx="0.5" /></React.Fragment>,
+    alert: <React.Fragment><path d="M12 3l10 18H2z" /><line x1="12" y1="10" x2="12" y2="14.5" /><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none" /></React.Fragment>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
+}
+function Demo(){
+  const names = ['dashboard','egg','animal','feed','box','cart','truck','dollar','wrench','users','chart','alert'];
+  return (
+    <div style={{padding:24,display:'flex',flexWrap:'wrap',gap:20}}>
+      {names.map(n => (
+        <div key={n} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6,width:80,color:'var(--primary-700)'}}>
+          <Icon name={n} size={26} />
+          <span style={{fontSize:11,color:'var(--text-muted)'}}>{n}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+<script>
+(function(){
+  var src = document.getElementById('__jsx_src').textContent;
+  var out = Babel.transform(src, {presets: [['react', {runtime: 'classic'}]]}).code;
+  var s = document.createElement('script');
+  s.textContent = out;
+  document.body.appendChild(s);
+})();
+</script>
+</body></html>

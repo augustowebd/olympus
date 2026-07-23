@@ -1,0 +1,52 @@
+:root {
+  /* Neutrals — warm-toned (matches terracotta primary), near-white/near-black */
+  --n-0: oklch(99% 0.002 70);
+  --n-50: oklch(97.5% 0.004 70);
+  --n-100: oklch(95% 0.007 70);
+  --n-200: oklch(90% 0.01 70);
+  --n-300: oklch(82% 0.013 70);
+  --n-400: oklch(68% 0.016 70);
+  --n-500: oklch(55% 0.018 70);
+  --n-600: oklch(44% 0.02 70);
+  --n-700: oklch(34% 0.02 70);
+  --n-800: oklch(25% 0.018 70);
+  --n-900: oklch(17% 0.015 70);
+
+  /* Primary — muted terracotta */
+  --primary-50: oklch(95% 0.015 50);
+  --primary-100: oklch(89% 0.03 50);
+  --primary-300: oklch(72% 0.055 50);
+  --primary-500: oklch(53% 0.075 45);
+  --primary-600: oklch(45% 0.07 42);
+  --primary-700: oklch(36% 0.06 40);
+
+  /* Accent — muted production green (positive indicators, growth) */
+  --accent-50: oklch(95% 0.02 150);
+  --accent-100: oklch(90% 0.035 150);
+  --accent-300: oklch(74% 0.055 150);
+  --accent-500: oklch(52% 0.065 150);
+  --accent-600: oklch(45% 0.065 150);
+
+  /* Semantic feedback */
+  --warning-100: oklch(92% 0.035 85);
+  --warning-500: oklch(65% 0.09 85);
+  --warning-700: oklch(45% 0.08 85);
+  --danger-100: oklch(92% 0.03 25);
+  --danger-500: oklch(55% 0.1 25);
+  --danger-700: oklch(40% 0.09 25);
+  --info-100: var(--primary-100);
+  --info-500: var(--primary-500);
+
+  /* Semantic aliases */
+  --bg-page: var(--n-50);
+  --bg-surface: var(--n-0);
+  --bg-sunken: var(--n-100);
+  --border-subtle: var(--n-200);
+  --border-default: var(--n-300);
+  --text-primary: var(--n-900);
+  --text-secondary: var(--n-600);
+  --text-muted: var(--n-400);
+  --text-on-primary: var(--n-0);
+  --text-link: var(--primary-600);
+  --text-link-hover: var(--primary-700);
+}
