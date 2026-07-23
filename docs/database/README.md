@@ -19,7 +19,8 @@ Cada contexto documentado aqui ganha uma seção com:
 ## Convenções de migration
 
 - Valores monetários: inteiro em centavos, nunca `float`/`decimal` (ver skill de arquitetura, Value Object `Dinheiro`).
-- Identificadores: UUID como chave primária das entidades de domínio.
+- Identificadores: `id` interno (integer autoincrement, só ligação/FK, nunca exposto) + `<sigla3>uuid` (uuid público, usado em API/links) — ver skill `identificadores-internos-e-publicos`. `Pessoas` (`colaboradores`/`fornecedores`/`clientes`) ainda usa UUID puro como PK, anterior a essa convenção — pendente de alinhamento, não é o padrão pra tabelas novas.
+- Toda tabela de entidade de domínio vive no schema Postgres do seu contexto de domínio (`producao.galpoes`, `vendas.itens_venda`) — ver skill `schema-por-contexto-de-dominio`.
 - Enums de status/tipo: coluna `string` com os valores do enum de domínio (ex.: `StatusVenda`), nunca inteiro mágico.
 - Toda tabela de entidade de domínio tem `created_at`/`updated_at`; `deleted_at` (soft delete) só quando o domínio precisar de histórico, não por padrão.
 - Nome de tabela no plural em snake_case, alinhado ao nome do agregado (`vendas`, `itens_venda`).
@@ -48,6 +49,26 @@ MER completo em [`erd.dbml`](./erd.dbml) — DBML (padrão dbdiagram.io), colar 
 | `clientes` | `id` uuid | `user_id` único → `users.id` |
 
 Essa hierarquia de dados é espelhada nas classes de domínio: `Domain\Pessoas\Entities\Usuario` é a base, e `Colaborador`, `Fornecedor` e `Cliente` estendem `Usuario` (`src/Domain/Pessoas/Entities`).
+
+### Producao
+
+Schema `producao`. Um `nucleo` é o local físico onde um ou mais `galpao` (galpão) ficam localizados; todo galpão pertence a exatamente um núcleo.
+
+```text
+[nucleos] 1 ───< N [galpoes]
+```
+
+| Tabela | Chave interna | Identificador público | Relação |
+|---|---|---|---|
+| `producao.nucleos` | `id` integer | `ncl_uuid` | — |
+| `producao.galpoes` | `id` integer | `glp_uuid` | `nucleo_id` → `nucleos.id` (interna, nunca exposta) |
+
+Campos de `galpoes`:
+
+- `nome` — nome do galpão.
+- `slug` — derivado do nome (`Domain\Producao\ValueObjects\Slug`), único.
+- `capacidade` — quantidade máxima de aves suportadas a cada alojamento (inteiro, > 0).
+- `status` — `StatusGalpao`: `OCUPADO`, `DESOCUPADO`, `VAZIO_SANITARIO`. Todo galpão novo nasce `DESOCUPADO`.
 
 ## Como manter atualizado
 
