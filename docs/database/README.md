@@ -63,12 +63,18 @@ Schema `producao`. Um `nucleo` é o local físico onde um ou mais `galpao` (galp
 | `producao.nucleos` | `id` integer | `ncl_uuid` | — |
 | `producao.galpoes` | `id` integer | `glp_uuid` | `nucleo_id` → `nucleos.id` (interna, nunca exposta) |
 
+Campos de `nucleos`:
+
+- `nome` — único (`erro NUCLEO_NOME_DUPLICADO` se repetido).
+
 Campos de `galpoes`:
 
 - `nome` — nome do galpão.
 - `slug` — derivado do nome (`Domain\Producao\ValueObjects\Slug`), único.
 - `capacidade` — quantidade máxima de aves suportadas a cada alojamento (inteiro, > 0).
 - `status` — `StatusGalpao`: `OCUPADO`, `DESOCUPADO`, `VAZIO_SANITARIO`. Todo galpão novo nasce `DESOCUPADO`.
+
+`nucleos.id` não pode ser removido com galpão vinculado (`erro NUCLEO_EM_USO`).
 
 ## Como manter atualizado
 

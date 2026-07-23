@@ -15,6 +15,7 @@ use App\Application\Shared\Contracts\GeradorIdentificador;
 use App\Application\Shared\Contracts\UnidadeDeTrabalho;
 use App\Domain\Producao\Entities\Nucleo;
 use App\Domain\Producao\Exceptions\NucleoNaoEncontradoException;
+use App\Domain\Producao\Exceptions\NucleoNomeDuplicadoException;
 use App\Domain\Producao\Repositories\NucleoRepository;
 use App\Domain\Producao\ValueObjects\Nome;
 use App\Domain\Producao\ValueObjects\NucleoId;
@@ -67,6 +68,11 @@ final class GerenciarNucleoTest extends TestCase
                 return null;
             }
 
+            public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+            {
+                return false;
+            }
+
             public function listar(): array
             {
                 return [];
@@ -89,6 +95,42 @@ final class GerenciarNucleoTest extends TestCase
         $this->assertSame('Núcleo Central', $nucleo->nome());
     }
 
+    public function test_criar_nucleo_lanca_excecao_quando_nome_ja_existe(): void
+    {
+        $this->expectException(NucleoNomeDuplicadoException::class);
+
+        $useCase = new CriarNucleo(
+            nucleos: new class implements NucleoRepository {
+                public function salvar(Nucleo $nucleo): void
+                {
+                }
+
+                public function obterPorId(NucleoId $id): ?Nucleo
+                {
+                    return null;
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return true;
+                }
+
+                public function listar(): array
+                {
+                    return [];
+                }
+
+                public function remover(NucleoId $id): void
+                {
+                }
+            },
+            unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
+            geradorIdentificador: $this->geradorFixo(self::NUCLEO_ID),
+        );
+
+        $useCase->executar(new CriarNucleoDto(nome: 'Núcleo Central'));
+    }
+
     public function test_listar_nucleos_delega_ao_repositorio(): void
     {
         $esperado = [Nucleo::registrar(NucleoId::fromString(self::NUCLEO_ID), Nome::deTexto('Núcleo Central'))];
@@ -106,6 +148,11 @@ final class GerenciarNucleoTest extends TestCase
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return null;
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
                 }
 
                 public function listar(): array
@@ -135,6 +182,11 @@ final class GerenciarNucleoTest extends TestCase
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return null;
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
                 }
 
                 public function listar(): array
@@ -171,6 +223,11 @@ final class GerenciarNucleoTest extends TestCase
                     return Nucleo::registrar($id, Nome::deTexto('Nome Antigo'));
                 }
 
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
+                }
+
                 public function listar(): array
                 {
                     return [];
@@ -188,6 +245,84 @@ final class GerenciarNucleoTest extends TestCase
         $this->assertSame('Nome Novo', $nucleo->nome());
     }
 
+    public function test_alterar_nucleo_lanca_excecao_quando_novo_nome_ja_existe_em_outro_registro(): void
+    {
+        $this->expectException(NucleoNomeDuplicadoException::class);
+
+        $useCase = new AlterarNucleo(
+            nucleos: new class implements NucleoRepository {
+                public function salvar(Nucleo $nucleo): void
+                {
+                }
+
+                public function obterPorId(NucleoId $id): ?Nucleo
+                {
+                    return Nucleo::registrar($id, Nome::deTexto('Nome Antigo'));
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return true;
+                }
+
+                public function listar(): array
+                {
+                    return [];
+                }
+
+                public function remover(NucleoId $id): void
+                {
+                }
+            },
+            unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
+        );
+
+        $useCase->executar(new AlterarNucleoDto(nucleoId: self::NUCLEO_ID, nome: 'Nome Em Uso'));
+    }
+
+    public function test_alterar_nucleo_ignora_o_proprio_registro_na_checagem_de_duplicidade(): void
+    {
+        $ignoradoRecebido = null;
+
+        $useCase = new AlterarNucleo(
+            nucleos: new class ($ignoradoRecebido) implements NucleoRepository {
+                public function __construct(private mixed &$ignoradoRecebido)
+                {
+                }
+
+                public function salvar(Nucleo $nucleo): void
+                {
+                }
+
+                public function obterPorId(NucleoId $id): ?Nucleo
+                {
+                    return Nucleo::registrar($id, Nome::deTexto('Nome Antigo'));
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    $this->ignoradoRecebido = $ignorando;
+
+                    return false;
+                }
+
+                public function listar(): array
+                {
+                    return [];
+                }
+
+                public function remover(NucleoId $id): void
+                {
+                }
+            },
+            unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
+        );
+
+        $useCase->executar(new AlterarNucleoDto(nucleoId: self::NUCLEO_ID, nome: 'Nome Novo'));
+
+        $this->assertSame(self::NUCLEO_ID, $ignoradoRecebido?->valor());
+    }
+
     public function test_remover_nucleo_lanca_excecao_quando_nao_existe(): void
     {
         $this->expectException(NucleoNaoEncontradoException::class);
@@ -201,6 +336,11 @@ final class GerenciarNucleoTest extends TestCase
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return null;
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
                 }
 
                 public function listar(): array

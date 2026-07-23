@@ -51,6 +51,39 @@ final class GerenciarNucleoTest extends TestCase
         $response->assertJsonPath('error.code', 'NUCLEO_NAO_ENCONTRADO');
     }
 
+    public function test_retorna_422_ao_criar_nucleo_com_nome_duplicado(): void
+    {
+        NucleoModel::query()->create(['ncl_uuid' => (string) Str::uuid(), 'nome' => 'Núcleo Central']);
+
+        $response = $this->actingAs(User::factory()->create())
+            ->postJson('/api/v1/nucleos', ['nome' => 'Núcleo Central']);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('error.code', 'NUCLEO_NOME_DUPLICADO');
+    }
+
+    public function test_retorna_422_ao_renomear_nucleo_para_nome_ja_usado_por_outro(): void
+    {
+        NucleoModel::query()->create(['ncl_uuid' => (string) Str::uuid(), 'nome' => 'Núcleo Central']);
+        $outro = NucleoModel::query()->create(['ncl_uuid' => (string) Str::uuid(), 'nome' => 'Núcleo Sul']);
+
+        $response = $this->actingAs(User::factory()->create())
+            ->putJson("/api/v1/nucleos/{$outro->ncl_uuid}", ['nome' => 'Núcleo Central']);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('error.code', 'NUCLEO_NOME_DUPLICADO');
+    }
+
+    public function test_permite_manter_o_proprio_nome_ao_alterar(): void
+    {
+        $nucleo = NucleoModel::query()->create(['ncl_uuid' => (string) Str::uuid(), 'nome' => 'Núcleo Central']);
+
+        $response = $this->actingAs(User::factory()->create())
+            ->putJson("/api/v1/nucleos/{$nucleo->ncl_uuid}", ['nome' => 'Núcleo Central']);
+
+        $response->assertOk();
+    }
+
     public function test_nao_remove_nucleo_com_galpao_vinculado(): void
     {
         $nucleo = NucleoModel::query()->create([

@@ -33,6 +33,17 @@ final class EloquentNucleoRepository implements NucleoRepository
         return $this->paraDominio($model);
     }
 
+    public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+    {
+        return NucleoModel::query()
+            ->where('nome', $nome)
+            ->when(
+                $ignorando !== null,
+                fn ($query) => $query->where('ncl_uuid', '!=', $ignorando->valor()),
+            )
+            ->exists();
+    }
+
     public function listar(): array
     {
         return NucleoModel::query()

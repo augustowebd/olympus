@@ -8,6 +8,7 @@ use App\Application\Producao\DTOs\CriarNucleoDto;
 use App\Application\Shared\Contracts\GeradorIdentificador;
 use App\Application\Shared\Contracts\UnidadeDeTrabalho;
 use App\Domain\Producao\Entities\Nucleo;
+use App\Domain\Producao\Exceptions\NucleoNomeDuplicadoException;
 use App\Domain\Producao\Repositories\NucleoRepository;
 use App\Domain\Producao\ValueObjects\Nome;
 use App\Domain\Producao\ValueObjects\NucleoId;
@@ -24,9 +25,15 @@ final readonly class CriarNucleo
     public function executar(CriarNucleoDto $dto): Nucleo
     {
         return $this->unidadeDeTrabalho->executar(function () use ($dto): Nucleo {
+            $nome = Nome::deTexto($dto->nome);
+
+            if ($this->nucleos->existeComNome($nome->valor())) {
+                throw new NucleoNomeDuplicadoException();
+            }
+
             $nucleo = Nucleo::registrar(
                 id: NucleoId::fromString($this->geradorIdentificador->gerar()),
-                nome: Nome::deTexto($dto->nome),
+                nome: $nome,
             );
 
             $this->nucleos->salvar($nucleo);

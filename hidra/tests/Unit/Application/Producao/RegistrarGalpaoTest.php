@@ -52,6 +52,11 @@ final class RegistrarGalpaoTest extends TestCase
                     return Nucleo::registrar($id, Nome::deTexto('Núcleo 1'));
                 }
 
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
+                }
+
                 public function listar(): array
                 {
                     return [];
@@ -110,6 +115,11 @@ final class RegistrarGalpaoTest extends TestCase
                     return null;
                 }
 
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
+                }
+
                 public function listar(): array
                 {
                     return [];
@@ -163,6 +173,11 @@ final class RegistrarGalpaoTest extends TestCase
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return Nucleo::registrar($id, Nome::deTexto('Núcleo 1'));
+                }
+
+                public function existeComNome(string $nome, ?NucleoId $ignorando = null): bool
+                {
+                    return false;
                 }
 
                 public function listar(): array
