@@ -1,6 +1,6 @@
 ---
 name: codificacao-pt-br
-description: Exigir português do Brasil em todo vocabulário de negócio do código e do banco — classes, métodos, variáveis, tabelas, colunas, enums, mensagens, commits e PRs. Use sempre que nomear qualquer coisa em qualquer projeto do ecossistema.
+description: Exigir português do Brasil em todo vocabulário de negócio do código e do banco — classes, métodos, variáveis, tabelas, colunas, enums, mensagens, commits e PRs — além de fuso horário America/Sao_Paulo e moeda sempre Real (BRL). Use sempre que nomear qualquer coisa, configurar timezone/locale, ou lidar com data/hora e valores monetários em qualquer projeto do ecossistema.
 ---
 
 # Codificação em pt-BR
@@ -63,6 +63,19 @@ Schema::create('sale_items', function (Blueprint $table) {
 });
 ```
 
+## Fuso horário e localidade
+
+- Timezone da aplicação: `America/Sao_Paulo` — `config/app.php` (`'timezone' => 'America/Sao_Paulo'`) em todo projeto Laravel do ecossistema, nunca o `UTC` padrão do Laravel.
+- Locale: `pt_BR` — `APP_LOCALE=pt_BR`, `APP_FALLBACK_LOCALE=pt_BR`, `APP_FAKER_LOCALE=pt_BR` no `.env`/`.env.example`.
+- A hora "de agora" usada pelo domínio (contrato `Relogio` — ver skill `arquitetura-ecossistema-granja`) reflete o fuso configurado da aplicação, não UTC arbitrário.
+- Exibição de data ao usuário: `dd/mm/aaaa`, nunca `mm/dd/aaaa` (já documentado no design system — `formatDatePt`, `docs/design-system/README.md`).
+
+## Moeda
+
+- Moeda oficial do sistema é o Real (BRL) — sem suporte a múltiplas moedas enquanto não for pedido (YAGNI).
+- Valores monetários continuam inteiros em centavos (Value Object `Dinheiro`, ver skill `arquitetura-ecossistema-granja`), nunca `float`.
+- Formatação exibida ao usuário: `R$` fora do campo, separador de milhar `.`, decimal `,` (`R$ 1.234,56`) — nunca `$`, `USD` ou ponto decimal americano. No cliente, usa `formatCurrencyPt` (design system), nunca `Intl.NumberFormat('en-US', ...)` ou equivalente.
+
 ## Onde vale
 
 - Domain, Application, Infrastructure, Presentation (Hidra) — todas as camadas.
@@ -76,6 +89,8 @@ Schema::create('sale_items', function (Blueprint $table) {
 - Traduzir literalmente convenção de framework que deveria ficar em inglês (`created_at` virar `criado_em` quebra o Eloquent sem necessidade).
 - Nome de tabela/coluna em inglês pra entidade de domínio (`sales`, `quantity`, `unit_price`).
 - Commit ou PR em inglês.
+- Timezone `UTC` (padrão do Laravel) ou qualquer outro diferente de `America/Sao_Paulo` num projeto novo.
+- Valor monetário em outra moeda, símbolo `$`/`USD`, ou formatação de data/número americana visível ao usuário.
 
 ## Checklist final
 
@@ -83,3 +98,5 @@ Schema::create('sale_items', function (Blueprint $table) {
 - Toda tabela e coluna de negócio no MER e na migration está em pt-BR?
 - As colunas/nomes que o framework exige em inglês (`created_at`, `id`, etc.) foram mantidas em inglês, sem tradução forçada?
 - Mensagem de commit e descrição de PR estão em pt-BR?
+- `config/app.php` está com `timezone => America/Sao_Paulo` e locale `pt_BR`?
+- Valor monetário é BRL, em centavos, formatado como `R$ 0.000,00`?
