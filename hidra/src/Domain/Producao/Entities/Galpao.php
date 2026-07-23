@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Domain\Producao\Entities;
 
-use App\Domain\Producao\Enums\CodigoErroProducao;
 use App\Domain\Producao\Enums\StatusGalpao;
 use App\Domain\Producao\ValueObjects\Capacidade;
 use App\Domain\Producao\ValueObjects\GalpaoId;
+use App\Domain\Producao\ValueObjects\Nome;
 use App\Domain\Producao\ValueObjects\NucleoId;
 use App\Domain\Producao\ValueObjects\Slug;
-use InvalidArgumentException;
 
 final readonly class Galpao
 {
     private function __construct(
         private GalpaoId $id,
-        private string $nome,
+        private Nome $nome,
         private Slug $slug,
         private Capacidade $capacidade,
         private NucleoId $nucleoId,
@@ -30,16 +29,12 @@ final readonly class Galpao
         Capacidade $capacidade,
         NucleoId $nucleoId,
     ): self {
-        if (trim($nome) === '') {
-            throw new InvalidArgumentException(
-                CodigoErroProducao::NOME_OBRIGATORIO->value,
-            );
-        }
+        $nome = Nome::deTexto($nome);
 
         return new self(
             id: $id,
             nome: $nome,
-            slug: Slug::deTexto($nome),
+            slug: Slug::deTexto($nome->valor()),
             capacidade: $capacidade,
             nucleoId: $nucleoId,
             status: StatusGalpao::DESOCUPADO,
@@ -53,7 +48,7 @@ final readonly class Galpao
 
     public function nome(): string
     {
-        return $this->nome;
+        return $this->nome->valor();
     }
 
     public function slug(): Slug
