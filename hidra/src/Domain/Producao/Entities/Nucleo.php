@@ -20,6 +20,11 @@ final readonly class Nucleo
         return new self($id, $nome);
     }
 
+    public function renomear(Nome $novoNome): self
+    {
+        return new self($this->id, $novoNome);
+    }
+
     public function id(): NucleoId
     {
         return $this->id;

@@ -43,9 +43,22 @@ final class RegistrarGalpaoTest extends TestCase
                 }
             },
             nucleos: new class implements NucleoRepository {
+                public function salvar(Nucleo $nucleo): void
+                {
+                }
+
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return Nucleo::registrar($id, Nome::deTexto('Núcleo 1'));
+                }
+
+                public function listar(): array
+                {
+                    return [];
+                }
+
+                public function remover(NucleoId $id): void
+                {
                 }
             },
             unidadeDeTrabalho: new class implements UnidadeDeTrabalho {
@@ -88,9 +101,22 @@ final class RegistrarGalpaoTest extends TestCase
                 }
             },
             nucleos: new class implements NucleoRepository {
+                public function salvar(Nucleo $nucleo): void
+                {
+                }
+
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return null;
+                }
+
+                public function listar(): array
+                {
+                    return [];
+                }
+
+                public function remover(NucleoId $id): void
+                {
                 }
             },
             unidadeDeTrabalho: new class implements UnidadeDeTrabalho {
@@ -130,9 +156,22 @@ final class RegistrarGalpaoTest extends TestCase
                 }
             },
             nucleos: new class implements NucleoRepository {
+                public function salvar(Nucleo $nucleo): void
+                {
+                }
+
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
                     return Nucleo::registrar($id, Nome::deTexto('Núcleo 1'));
+                }
+
+                public function listar(): array
+                {
+                    return [];
+                }
+
+                public function remover(NucleoId $id): void
+                {
                 }
             },
             unidadeDeTrabalho: new class implements UnidadeDeTrabalho {

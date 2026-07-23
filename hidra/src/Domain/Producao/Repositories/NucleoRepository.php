@@ -9,5 +9,12 @@ use App\Domain\Producao\ValueObjects\NucleoId;
 
 interface NucleoRepository
 {
+    public function salvar(Nucleo $nucleo): void;
+
     public function obterPorId(NucleoId $id): ?Nucleo;
+
+    /** @return list<Nucleo> */
+    public function listar(): array;
+
+    public function remover(NucleoId $id): void;
 }
