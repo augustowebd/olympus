@@ -26,7 +26,28 @@ Cada contexto documentado aqui ganha uma seção com:
 
 ## Diagramas
 
-Ainda não há contexto de domínio implementado — a primeira migration real gera a primeira seção aqui (diagrama + dicionário do contexto correspondente).
+MER completo em [`erd.dbml`](./erd.dbml) — DBML (padrão dbdiagram.io), colar em https://dbdiagram.io para visualizar (ver skill `mer-antes-de-persistir`).
+
+### Pessoas
+
+`users` (tabela padrão do Laravel) é o centro de verdade de identidade: todo colaborador, fornecedor e cliente é, antes de tudo, um `user`. Colaborador/Fornecedor/Cliente são **tipos (papéis) de usuário**, não uma tabela única com coluna `tipo` — cada papel é uma tabela satélite com `user_id` único apontando para `users.id`. Um mesmo usuário pode acumular mais de um papel (ex.: colaborador que também é cliente).
+
+```text
+            .-[colaboradores]
+            |
+[users] <---+-[fornecedores]
+            |
+            .-[clientes]
+```
+
+| Tabela | Chave | Relação |
+|---|---|---|
+| `users` | `id` bigint autoincrement | central — tabela de framework/auth, não usa UUID |
+| `colaboradores` | `id` uuid | `user_id` único → `users.id` |
+| `fornecedores` | `id` uuid | `user_id` único → `users.id` |
+| `clientes` | `id` uuid | `user_id` único → `users.id` |
+
+Essa hierarquia de dados é espelhada nas classes de domínio: `Domain\Pessoas\Entities\Usuario` é a base, e `Colaborador`, `Fornecedor` e `Cliente` estendem `Usuario` (`src/Domain/Pessoas/Entities`).
 
 ## Como manter atualizado
 
