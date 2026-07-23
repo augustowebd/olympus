@@ -1,6 +1,6 @@
 ---
 name: permissoes-modulo-funcionalidade-acao
-description: Mapear toda funcionalidade criada em Módulo → Funcionalidade → Ação para alimentar o sistema de permissões (por perfil e/ou granular). Use sempre que criar, alterar ou remover um caso de uso, endpoint ou tela que precise de controle de acesso, em qualquer projeto do ecossistema.
+description: Mapear toda funcionalidade criada em Módulo → Funcionalidade → Ação para alimentar o sistema de permissões por perfil. Use sempre que criar, alterar ou remover um caso de uso, endpoint ou tela que precise de controle de acesso, em qualquer projeto do ecossistema.
 ---
 
 # Permissões: Módulo → Funcionalidade → Ação
@@ -26,7 +26,7 @@ Demeter -> colaborador -> ativar
 Demeter -> colaborador -> desativar
 ```
 
-Essa tripla é o que autoriza — por perfil (conjunto de triplas) e/ou de forma granular (uma tripla isolada concedida a um usuário específico).
+Essa tripla é o que autoriza. A permissão nunca é concedida direto a um usuário — sempre a um **perfil** (role), que é um conjunto de triplas; o usuário recebe um ou mais perfis. A granularidade está em montar o perfil com o subconjunto exato de triplas que ele precisa, não em conceder tripla avulsa a uma pessoa.
 
 ## Vocabulário de ações
 
@@ -120,7 +120,7 @@ O case do `Permissao` continua sendo criado à mão (é o registro fechado do qu
 2. Verificar se a tripla já existe no enum `Permissao` — reusar, nunca duplicar com nome diferente para o mesmo significado.
 3. Adicionar os casos que faltam.
 4. O caso de uso/endpoint correspondente exige a permissão antes de executar (gate de autorização no Hidra, não no cliente).
-5. Perfis (roles) e permissões concedidas a usuários específicos são combinações dessas triplas — não crie um mecanismo de autorização paralelo por funcionalidade.
+5. Perfis (roles) são combinações dessas triplas, e usuários recebem perfis — não crie um mecanismo de autorização paralelo por funcionalidade nem conceda tripla direto a um usuário.
 
 ## Proibido
 
@@ -129,6 +129,7 @@ O case do `Permissao` continua sendo criado à mão (é o registro fechado do qu
 - Criar ação nova em `Acao` quando uma ação canônica já cobre o caso.
 - Criar módulo novo em `Modulo` fora dos projetos reais do ecossistema.
 - Autorizar só no cliente (esconder botão) sem o Hidra também negar a ação.
+- Conceder uma tripla diretamente a um usuário — a permissão sempre passa por um perfil.
 - Misturar módulo e funcionalidade num único nível (ex.: `colaborador.demeter.criar` — a ordem é sempre módulo → funcionalidade → ação).
 
 ## Checklist final
@@ -138,3 +139,4 @@ O case do `Permissao` continua sendo criado à mão (é o registro fechado do qu
 - O valor do case foi montado com `Permissao::compor(Modulo::..., '<funcionalidade>', Acao::...)`?
 - A ação usa o vocabulário canônico de `Acao`, ou há justificativa pra um verbo específico?
 - O Hidra valida a permissão no caso de uso/endpoint, não só a UI do cliente?
+- A permissão está sendo concedida via perfil, não direto a um usuário?
