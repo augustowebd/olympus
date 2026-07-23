@@ -70,7 +70,7 @@
                   "mode": "raw",
                   "raw": "{\n  \"nome\": \"Núcleo Central\"\n}"
                 },
-                "description": "**O que faz**\nRegistra um novo núcleo — local físico onde galpões ficam localizados.\n\n**Permissão exigida**\n`demeter.nucleo.criar`\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório).\n\n**Resposta de sucesso — 201 Created**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Central\" } }\n```\n\n**Erro — 422**: `NOME_OBRIGATORIO`.\n\n**401 Unauthorized** — sem token Sanctum válido."
+                "description": "**O que faz**\nRegistra um novo núcleo — local físico onde galpões ficam localizados. Nome é único no ecossistema.\n\n**Permissão exigida**\n`demeter.nucleo.criar`\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório, único).\n\n**Resposta de sucesso — 201 Created**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Central\" } }\n```\n\n**Erros — 422**: `NOME_OBRIGATORIO`, `NUCLEO_NOME_DUPLICADO`.\n\n**401 Unauthorized** — sem token Sanctum válido."
               },
               "response": []
             },
@@ -121,7 +121,7 @@
                   "mode": "raw",
                   "raw": "{\n  \"nome\": \"Núcleo Renomeado\"\n}"
                 },
-                "description": "**O que faz**\nRenomeia um núcleo existente.\n\n**Permissão exigida**\n`demeter.nucleo.alterar`\n\n**Parâmetros (path)**\n- `ncl_uuid` (uuid, obrigatório).\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório).\n\n**Resposta de sucesso — 200 OK**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Renomeado\" } }\n```\n\n**Erros — 422**: `NUCLEO_NAO_ENCONTRADO`, `NOME_OBRIGATORIO`.\n\n**401 Unauthorized** — sem token Sanctum válido."
+                "description": "**O que faz**\nRenomeia um núcleo existente.\n\n**Permissão exigida**\n`demeter.nucleo.alterar`\n\n**Parâmetros (path)**\n- `ncl_uuid` (uuid, obrigatório).\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório).\n\n**Resposta de sucesso — 200 OK**\n```json\n{ \"data\": { \"ncl_uuid\": \"d8d1e9cb-a263-4a1c-985d-9082116a5247\", \"nome\": \"Núcleo Renomeado\" } }\n```\n\n**Erros — 422**: `NUCLEO_NAO_ENCONTRADO`, `NOME_OBRIGATORIO`, `NUCLEO_NOME_DUPLICADO` (nome já usado por outro núcleo; manter o próprio nome não conta como duplicado).\n\n**401 Unauthorized** — sem token Sanctum válido."
               },
               "response": []
             },
