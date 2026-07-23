@@ -26,7 +26,7 @@ Demeter -> colaborador -> ativar
 Demeter -> colaborador -> desativar
 ```
 
-Essa tripla é o que autoriza — por perfil (conjunto de triplas) e/ou de forma granular (uma triplla isolada concedida a um usuário específico).
+Essa tripla é o que autoriza — por perfil (conjunto de triplas) e/ou de forma granular (uma tripla isolada concedida a um usuário específico).
 
 ## Vocabulário de ações
 
@@ -46,7 +46,42 @@ Ações canônicas, reutilize antes de inventar uma nova:
 
 Autorização é regra de negócio: decidida e aplicada sempre no Hidra (ver skill `arquitetura-ecossistema-granja`), nunca só escondendo botão no cliente.
 
-Cada tripla vira um caso do enum central de permissões:
+`Permissao` é a fonte da verdade — um enum fechado com um case por tripla **realmente concedível**. Isso é proposital: compor módulo+funcionalidade+ação livremente em runtime permitiria checar uma permissão que ninguém registrou. Mas os segmentos do valor de cada case não são strings soltas — vêm de `Modulo` e `Acao`, dois enums de apoio que padronizam o vocabulário e evitam divergência de grafia entre cases.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Shared\Enums;
+
+enum Modulo: string
+{
+    case DEMETER = 'demeter';
+    case ARGOS = 'argos';
+    case HERMES = 'hermes';
+    case PLUTO = 'pluto';
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Shared\Enums;
+
+enum Acao: string
+{
+    case CRIAR = 'criar';
+    case VISUALIZAR = 'visualizar';
+    case LISTAR = 'listar';
+    case ALTERAR = 'alterar';
+    case REMOVER = 'remover';
+    case ATIVAR = 'ativar';
+    case DESATIVAR = 'desativar';
+}
+```
 
 ```php
 <?php
@@ -64,12 +99,20 @@ enum Permissao: string
     case DEMETER_COLABORADOR_REMOVER = 'demeter.colaborador.remover';
     case DEMETER_COLABORADOR_ATIVAR = 'demeter.colaborador.ativar';
     case DEMETER_COLABORADOR_DESATIVAR = 'demeter.colaborador.desativar';
+
+    public static function compor(Modulo $modulo, string $funcionalidade, Acao $acao): string
+    {
+        return sprintf('%s.%s.%s', $modulo->value, $funcionalidade, $acao->value);
+    }
 }
 ```
 
+O case do `Permissao` continua sendo criado à mão (é o registro fechado do que existe), mas seu valor é montado com `Permissao::compor(Modulo::DEMETER, 'colaborador', Acao::CRIAR)` em vez de digitar a string — isso garante em tempo de escrita que módulo e ação vieram do vocabulário fechado, e um teste unitário simples (`assertSame` do valor esperado) pega divergência de grafia antes de virar bug de autorização.
+
 - Nome do case: `MODULO_FUNCIONALIDADE_ACAO`, tudo maiúsculo.
-- Valor do case: `modulo.funcionalidade.acao`, tudo minúsculo, separado por ponto — é o código estável persistido/transmitido (perfil ↔ permissão, claim de token, etc.), nunca o nome do case.
-- Um módulo/funcionalidade/ação sem verbo genérico correspondente ainda segue o padrão: `pluto.venda.aprovar`, `hermes.entrega.confirmar`.
+- Valor do case: `modulo.funcionalidade.acao`, tudo minúsculo, separado por ponto, montado via `Permissao::compor()` — é o código estável persistido/transmitido (perfil ↔ permissão, claim de token, etc.), nunca o nome do case.
+- Funcionalidade continua string livre (é a entidade/área de negócio, não um vocabulário fechado como módulo e ação) — só módulo e ação viram enum.
+- Um módulo/funcionalidade/ação sem verbo genérico correspondente ainda segue o padrão: `pluto.venda.aprovar`, `hermes.entrega.confirmar` — se o verbo se repetir em mais de uma funcionalidade, vira novo case em `Acao`.
 
 ## Fluxo obrigatório ao criar uma funcionalidade
 
@@ -82,7 +125,9 @@ enum Permissao: string
 ## Proibido
 
 - Checar permissão comparando string solta (`if ($acao === 'criar')`) em vez do case do enum.
-- Criar ação nova quando uma ação canônica já cobre o caso.
+- Digitar o valor do case de `Permissao` na mão em vez de compor com `Modulo`/`Acao`.
+- Criar ação nova em `Acao` quando uma ação canônica já cobre o caso.
+- Criar módulo novo em `Modulo` fora dos projetos reais do ecossistema.
 - Autorizar só no cliente (esconder botão) sem o Hidra também negar a ação.
 - Misturar módulo e funcionalidade num único nível (ex.: `colaborador.demeter.criar` — a ordem é sempre módulo → funcionalidade → ação).
 
@@ -90,5 +135,6 @@ enum Permissao: string
 
 - A funcionalidade está mapeada como módulo → funcionalidade → ação?
 - A tripla já existe no enum `Permissao` antes de criar uma nova?
-- A ação usa o vocabulário canônico, ou há justificativa pra um verbo específico?
+- O valor do case foi montado com `Permissao::compor(Modulo::..., '<funcionalidade>', Acao::...)`?
+- A ação usa o vocabulário canônico de `Acao`, ou há justificativa pra um verbo específico?
 - O Hidra valida a permissão no caso de uso/endpoint, não só a UI do cliente?
