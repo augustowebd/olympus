@@ -1,0 +1,55 @@
+Project olympus {
+  database_type: 'MySQL'
+  note: 'MER do Hidra — fonte de dados do ecossistema Olympus'
+}
+
+TableGroup pessoas {
+  users
+  colaboradores
+  fornecedores
+  clientes
+}
+
+Table users {
+  id integer [pk, increment]
+  name varchar
+  email varchar [unique, not null]
+  email_verified_at timestamp [null]
+  password varchar
+  remember_token varchar [null]
+  created_at timestamp
+  updated_at timestamp
+
+  note: '''
+    Centro de verdade de identidade do ecossistema.
+    Toda pessoa (colaborador, fornecedor, cliente) tem exatamente um registro aqui.
+    Tabela padrão do Laravel — chave bigint autoincrement, não UUID.
+  '''
+}
+
+Table colaboradores {
+  id uuid [pk]
+  user_id integer [not null, unique, ref: > users.id]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Usuário que é colaborador (funcionário) da granja.'
+}
+
+Table fornecedores {
+  id uuid [pk]
+  user_id integer [not null, unique, ref: > users.id]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Usuário que é fornecedor da granja.'
+}
+
+Table clientes {
+  id uuid [pk]
+  user_id integer [not null, unique, ref: > users.id]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Usuário que é cliente da granja.'
+}
