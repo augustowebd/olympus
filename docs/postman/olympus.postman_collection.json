@@ -1,0 +1,25 @@
+{
+  "info": {
+    "name": "Olympus",
+    "description": "API do Hidra — organizada em pastas Módulo/Funcionalidade, uma pasta por módulo cliente (Demeter, Argos, Hermes, Pluto). Ver skill postman-collection-por-funcionalidade.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
