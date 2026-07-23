@@ -14,7 +14,45 @@
       }
     ]
   },
-  "item": [],
+  "item": [
+    {
+      "name": "Demeter",
+      "item": [
+        {
+          "name": "Galpão",
+          "item": [
+            {
+              "name": "Criar galpão",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/galpoes",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "galpoes"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nome\": \"Galpão Norte 01\",\n  \"capacidade\": 5000,\n  \"ncl_uuid\": \"5e40919a-80e3-4c96-80a5-efa44dcb4aec\"\n}"
+                },
+                "description": "**O que faz**\nRegistra um novo galpão (estrutura de alojamento de aves) vinculado a um núcleo existente. Todo galpão criado nasce com status `DESOCUPADO`.\n\n**Permissão exigida**\n`demeter.galpao.criar`\n\n**Parâmetros (body, JSON)**\n- `nome` (string, obrigatório) — nome do galpão.\n- `capacidade` (integer, obrigatório, mínimo 1) — quantidade máxima de aves suportadas a cada alojamento.\n- `ncl_uuid` (uuid, obrigatório) — identificador público do núcleo ao qual o galpão pertence. Precisa ser o `ncl_uuid` de um núcleo já existente.\n\n**Resposta de sucesso — 201 Created**\n```json\n{\n  \"data\": {\n    \"glp_uuid\": \"ca6f0725-ca13-491e-8a22-498a5f588706\",\n    \"nome\": \"Galpão Norte 01\",\n    \"slug\": \"galpao-norte-01\",\n    \"capacidade\": 5000,\n    \"ncl_uuid\": \"5e40919a-80e3-4c96-80a5-efa44dcb4aec\",\n    \"status\": \"DESOCUPADO\"\n  }\n}\n```\n\n**Respostas de erro — 422 Unprocessable Entity**\n```json\n{ \"error\": { \"code\": \"NUCLEO_NAO_ENCONTRADO\", \"message\": \"O núcleo informado não foi encontrado.\" } }\n```\n```json\n{ \"error\": { \"code\": \"SLUG_DUPLICADO\", \"message\": \"Já existe um galpão com esse nome (slug duplicado).\" } }\n```\nOutros códigos possíveis: `NOME_OBRIGATORIO`, `CAPACIDADE_INVALIDA`.\n\n**401 Unauthorized** — sem token Sanctum válido.\n\n**Observações**\n- `glp_uuid` é o identificador público do galpão — nunca o `id` interno da tabela (ver skill `identificadores-internos-e-publicos`).\n- `slug` é derivado automaticamente do `nome`, não é um campo de entrada."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "variable": [
     {
       "key": "base_url",

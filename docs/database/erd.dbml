@@ -1,5 +1,5 @@
 Project olympus {
-  database_type: 'MySQL'
+  database_type: 'PostgreSQL'
   note: 'MER do Hidra — fonte de dados do ecossistema Olympus'
 }
 
@@ -52,4 +52,33 @@ Table clientes {
   updated_at timestamp
 
   note: 'Usuário que é cliente da granja.'
+}
+
+TableGroup producao {
+  producao.nucleos
+  producao.galpoes
+}
+
+Table producao.nucleos {
+  id integer [pk, increment, note: 'uso interno, nunca exposto']
+  ncl_uuid uuid [unique, not null, note: 'identificador público']
+  nome varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Local físico onde os galpões estão localizados.'
+}
+
+Table producao.galpoes {
+  id integer [pk, increment, note: 'uso interno, nunca exposto']
+  glp_uuid uuid [unique, not null, note: 'identificador público']
+  nome varchar [not null]
+  slug varchar [unique, not null, note: 'slug derivado do nome']
+  capacidade integer [not null, note: 'quantidade máxima de aves suportadas a cada alojamento']
+  nucleo_id integer [not null, ref: > producao.nucleos.id, note: 'FK interna — nunca exposta']
+  status varchar [not null, note: 'StatusGalpao: OCUPADO, DESOCUPADO, VAZIO_SANITARIO']
+  created_at timestamp
+  updated_at timestamp
+
+  note: 'Estrutura de alojamento de aves para produção de ovos.'
 }

@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Producao\Enums;
+
+enum CodigoErroProducao: string
+{
+    case NOME_OBRIGATORIO = 'NOME_OBRIGATORIO';
+    case SLUG_INVALIDO = 'SLUG_INVALIDO';
+    case SLUG_DUPLICADO = 'SLUG_DUPLICADO';
+    case CAPACIDADE_INVALIDA = 'CAPACIDADE_INVALIDA';
+    case NUCLEO_NAO_ENCONTRADO = 'NUCLEO_NAO_ENCONTRADO';
+    case GALPAO_NAO_ENCONTRADO = 'GALPAO_NAO_ENCONTRADO';
+}
