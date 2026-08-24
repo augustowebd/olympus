@@ -5,4 +5,4 @@ Primary action button. Use `primary` for the single main action on a screen, `se
 <Button variant="secondary">Cancelar</Button>
 ```
 
-Default size is a 56px tap target — do not shrink below `sm` (40px) for touch/tablet contexts common in this ERP.
+Default size is 44px; `sm` is 36px. Use concise labels: Cancelar, Editar, Pesquisar, Salvar.

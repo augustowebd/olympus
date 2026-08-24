@@ -12,8 +12,7 @@ class Usuario
         private readonly UsuarioId $id,
         private readonly string $nome,
         private readonly string $email,
-    ) {
-    }
+    ) {}
 
     public function id(): UsuarioId
     {

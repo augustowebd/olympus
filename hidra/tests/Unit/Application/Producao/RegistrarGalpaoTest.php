@@ -27,10 +27,9 @@ final class RegistrarGalpaoTest extends TestCase
         $galpaoSalvo = null;
 
         $useCase = new RegistrarGalpao(
-            galpoes: new class ($galpaoSalvo) implements GalpaoRepository {
-                public function __construct(private mixed &$salvo)
-                {
-                }
+            galpoes: new class($galpaoSalvo) implements GalpaoRepository
+            {
+                public function __construct(private mixed &$salvo) {}
 
                 public function salvar(Galpao $galpao): void
                 {
@@ -42,10 +41,9 @@ final class RegistrarGalpaoTest extends TestCase
                     return false;
                 }
             },
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -62,17 +60,17 @@ final class RegistrarGalpaoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
-            unidadeDeTrabalho: new class implements UnidadeDeTrabalho {
+            unidadeDeTrabalho: new class implements UnidadeDeTrabalho
+            {
                 public function executar(callable $operacao): mixed
                 {
                     return $operacao();
                 }
             },
-            geradorIdentificador: new class implements GeradorIdentificador {
+            geradorIdentificador: new class implements GeradorIdentificador
+            {
                 public function gerar(): string
                 {
                     return '11111111-1111-1111-1111-111111111111';
@@ -95,20 +93,18 @@ final class RegistrarGalpaoTest extends TestCase
         $this->expectException(NucleoNaoEncontradoException::class);
 
         $useCase = new RegistrarGalpao(
-            galpoes: new class implements GalpaoRepository {
-                public function salvar(Galpao $galpao): void
-                {
-                }
+            galpoes: new class implements GalpaoRepository
+            {
+                public function salvar(Galpao $galpao): void {}
 
                 public function existeComSlug(string $slug): bool
                 {
                     return false;
                 }
             },
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -125,17 +121,17 @@ final class RegistrarGalpaoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
-            unidadeDeTrabalho: new class implements UnidadeDeTrabalho {
+            unidadeDeTrabalho: new class implements UnidadeDeTrabalho
+            {
                 public function executar(callable $operacao): mixed
                 {
                     return $operacao();
                 }
             },
-            geradorIdentificador: new class implements GeradorIdentificador {
+            geradorIdentificador: new class implements GeradorIdentificador
+            {
                 public function gerar(): string
                 {
                     return '11111111-1111-1111-1111-111111111111';
@@ -155,20 +151,18 @@ final class RegistrarGalpaoTest extends TestCase
         $this->expectException(SlugDuplicadoException::class);
 
         $useCase = new RegistrarGalpao(
-            galpoes: new class implements GalpaoRepository {
-                public function salvar(Galpao $galpao): void
-                {
-                }
+            galpoes: new class implements GalpaoRepository
+            {
+                public function salvar(Galpao $galpao): void {}
 
                 public function existeComSlug(string $slug): bool
                 {
                     return true;
                 }
             },
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -185,17 +179,17 @@ final class RegistrarGalpaoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
-            unidadeDeTrabalho: new class implements UnidadeDeTrabalho {
+            unidadeDeTrabalho: new class implements UnidadeDeTrabalho
+            {
                 public function executar(callable $operacao): mixed
                 {
                     return $operacao();
                 }
             },
-            geradorIdentificador: new class implements GeradorIdentificador {
+            geradorIdentificador: new class implements GeradorIdentificador
+            {
                 public function gerar(): string
                 {
                     return '11111111-1111-1111-1111-111111111111';

@@ -45,7 +45,7 @@ final class GerenciarNucleoTest extends TestCase
     public function test_retorna_422_ao_visualizar_nucleo_inexistente(): void
     {
         $response = $this->actingAs(User::factory()->create())
-            ->getJson('/api/v1/nucleos/' . Str::uuid());
+            ->getJson('/api/v1/nucleos/'.Str::uuid());
 
         $response->assertStatus(422);
         $response->assertJsonPath('error.code', 'NUCLEO_NAO_ENCONTRADO');

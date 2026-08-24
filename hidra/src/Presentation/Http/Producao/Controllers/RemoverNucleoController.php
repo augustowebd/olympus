@@ -11,10 +11,9 @@ final readonly class RemoverNucleoController
 {
     public function __construct(
         private RemoverNucleo $removerNucleo,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(string $nclUuid): Response
+        public function __invoke(string $nclUuid): Response
     {
         $this->removerNucleo->executar($nclUuid);
 

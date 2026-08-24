@@ -141,6 +141,63 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "Endereço",
+          "item": [
+            {
+              "name": "Criar endereço de colaborador",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Accept", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/v1/colaborador/:colaborador_uuid/enderecos", "host": ["{{base_url}}"], "path": ["api", "v1", "colaborador", ":colaborador_uuid", "enderecos"] },
+                "body": { "mode": "raw", "raw": "{\\n  \\\"cep\\\": \\\"13010-061\\\",\\n  \\\"logradouro\\\": \\\"Rua Barreto Leme\\\",\\n  \\\"numero\\\": \\\"1200\\\",\\n  \\\"bairro\\\": \\\"Centro\\\",\\n  \\\"pais_uuid\\\": \\\"{{pais_uuid}}\\\",\\n  \\\"uf_uuid\\\": \\\"{{uf_uuid}}\\\",\\n  \\\"cidade_uuid\\\": \\\"{{cidade_uuid}}\\\"\\n}" },
+                "description": "**O que faz**\\nCria e vincula um endereço ao colaborador. Troque `colaborador` por `fornecedor` ou `cliente` para os demais proprietários.\\n\\n**Permissão exigida**\\n`demeter.endereco.criar`\\n\\n**Erros — 422**: `CEP_INVALIDO`, `CAMPO_ENDERECO_OBRIGATORIO`, `LOCALIDADE_INVALIDA`."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar endereços do proprietário",
+              "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/v1/colaborador/:colaborador_uuid/enderecos", "host": ["{{base_url}}"], "path": ["api", "v1", "colaborador", ":colaborador_uuid", "enderecos"] }, "description": "Lista endereços pela view `vw_colaborador_endereco`. Permissão: `demeter.endereco.listar`." },
+              "response": []
+            },
+            {
+              "name": "Visualizar endereço",
+              "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/v1/enderecos/:end_uuid", "host": ["{{base_url}}"], "path": ["api", "v1", "enderecos", ":end_uuid"] }, "description": "Visualiza um endereço. Permissão: `demeter.endereco.visualizar`." },
+              "response": []
+            },
+            {
+              "name": "Alterar endereço",
+              "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/v1/enderecos/:end_uuid", "host": ["{{base_url}}"], "path": ["api", "v1", "enderecos", ":end_uuid"] }, "body": { "mode": "raw", "raw": "{ \\\"cep\\\": \\\"13010-061\\\", \\\"logradouro\\\": \\\"Rua Barreto Leme\\\", \\\"numero\\\": \\\"1200\\\", \\\"bairro\\\": \\\"Centro\\\", \\\"pais_uuid\\\": \\\"{{pais_uuid}}\\\", \\\"uf_uuid\\\": \\\"{{uf_uuid}}\\\", \\\"cidade_uuid\\\": \\\"{{cidade_uuid}}\\\" }" }, "description": "Altera um endereço. Permissão: `demeter.endereco.alterar`." },
+              "response": []
+            },
+            {
+              "name": "Remover endereço",
+              "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/v1/enderecos/:end_uuid", "host": ["{{base_url}}"], "path": ["api", "v1", "enderecos", ":end_uuid"] }, "description": "Remove endereço sem vínculos. Permissão: `demeter.endereco.remover`. Erro: `ENDERECO_EM_USO`." },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Argos",
+      "item": [
+        {
+          "name": "Autenticação",
+          "item": [
+            {
+              "name": "Autenticar no Argos",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/v1/autenticacoes/argos", "host": ["{{base_url}}"], "path": ["api", "v1", "autenticacoes", "argos"] },
+                "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Qaz123\"\n}" },
+                "description": "Autentica administrador ou colaborador com permissão `argos.*`. `username` é `admin` ou e-mail de 4 a 255 caracteres. `password` tem de 4 a 32 caracteres, ao menos uma letra e um número. Retorna token Sanctum. Erros: validação 422, `CREDENCIAIS_INVALIDAS`, `ACESSO_ARGOS_NEGADO`."
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }

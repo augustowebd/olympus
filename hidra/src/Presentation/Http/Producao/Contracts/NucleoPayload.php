@@ -8,7 +8,5 @@ final class NucleoPayload
 {
     public const string NOME = 'nome';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }

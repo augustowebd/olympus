@@ -8,7 +8,8 @@ interface UnidadeDeTrabalho
 {
     /**
      * @template T
-     * @param callable(): T $operacao
+     *
+     * @param  callable(): T  $operacao
      * @return T
      */
     public function executar(callable $operacao): mixed;

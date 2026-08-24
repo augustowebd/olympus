@@ -6,9 +6,7 @@ namespace App\Domain\Pessoas\ValueObjects;
 
 final readonly class UsuarioId
 {
-    private function __construct(private int $valor)
-    {
-    }
+    private function __construct(private int $valor) {}
 
     public static function fromInt(int $valor): self
     {

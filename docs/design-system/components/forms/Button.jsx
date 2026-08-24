@@ -1,8 +1,8 @@
 import React from 'react';
 
 const sizes = {
-  md: { padding: '10px 20px', fontSize: 'var(--text-base)', minHeight: 'var(--tap-target-min)' },
-  sm: { padding: '8px 14px', fontSize: 'var(--text-sm)', minHeight: '40px' },
+  md: { padding: '8px 16px', fontSize: 'var(--text-sm)', minHeight: '44px' },
+  sm: { padding: '6px 12px', fontSize: 'var(--text-xs)', minHeight: '36px' },
 };
 
 const variants = {
@@ -20,8 +20,8 @@ export function Button({ children, variant = 'primary', size = 'md', icon, disab
       disabled={disabled}
       style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        fontFamily: 'var(--font-sans)', fontWeight: 'var(--weight-semibold)',
-        borderRadius: 'var(--radius-md)', cursor: disabled ? 'not-allowed' : 'pointer',
+        fontFamily: 'var(--font-sans)', fontWeight: 'var(--weight-medium)',
+        borderRadius: 'var(--radius-sm)', cursor: disabled ? 'not-allowed' : 'pointer',
         opacity: disabled ? 0.5 : 1, transition: 'filter var(--duration-fast) var(--ease-standard)',
         width: fullWidth ? '100%' : undefined,
         ...sizes[size], ...v,

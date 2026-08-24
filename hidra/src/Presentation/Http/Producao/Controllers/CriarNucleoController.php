@@ -16,10 +16,9 @@ final readonly class CriarNucleoController
 {
     public function __construct(
         private CriarNucleo $criarNucleo,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(CriarNucleoRequest $request): JsonResponse
+        public function __invoke(CriarNucleoRequest $request): JsonResponse
     {
         $dados = $request->validated();
 

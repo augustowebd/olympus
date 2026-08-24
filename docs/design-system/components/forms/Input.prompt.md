@@ -1,4 +1,4 @@
-Text field with label, helper/error text, and optional unit suffix (e.g. kg, un) — used across production and stock forms. `type="date"` masks input as dd/mm/aaaa; `type="currency"` masks as pt-BR currency (R$ 0,00).
+Text field with label, helper/error text, and optional unit suffix (e.g. kg, un) — used across production and stock forms. Controls are 44px, use a 2px required-state indicator, discreet placeholders, and uppercase display for typed text (except password). `type="date"` masks input as dd/mm/aaaa; `type="currency"` masks as pt-BR currency (R$ 0,00).
 
 ```jsx
 <Input label="Peso médio (g)" value={peso} onChange={handleChange} unit="g" />

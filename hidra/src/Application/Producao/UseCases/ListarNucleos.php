@@ -11,8 +11,7 @@ final readonly class ListarNucleos
 {
     public function __construct(
         private NucleoRepository $nucleos,
-    ) {
-    }
+    ) {}
 
     /** @return list<Nucleo> */
     public function executar(): array

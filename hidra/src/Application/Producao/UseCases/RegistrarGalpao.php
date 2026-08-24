@@ -25,8 +25,7 @@ final readonly class RegistrarGalpao
         private NucleoRepository $nucleos,
         private UnidadeDeTrabalho $unidadeDeTrabalho,
         private GeradorIdentificador $geradorIdentificador,
-    ) {
-    }
+    ) {}
 
     public function executar(RegistrarGalpaoDto $dto): Galpao
     {
@@ -36,11 +35,11 @@ final readonly class RegistrarGalpao
                 $nome = Nome::deTexto($dto->nome);
 
                 if ($this->nucleos->obterPorId($nucleoId) === null) {
-                    throw new NucleoNaoEncontradoException();
+                    throw new NucleoNaoEncontradoException;
                 }
 
                 if ($this->galpoes->existeComSlug(Slug::deTexto($nome->valor())->valor())) {
-                    throw new SlugDuplicadoException();
+                    throw new SlugDuplicadoException;
                 }
 
                 $galpao = Galpao::registrar(

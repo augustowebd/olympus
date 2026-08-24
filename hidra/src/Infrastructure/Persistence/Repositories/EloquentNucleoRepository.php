@@ -59,7 +59,7 @@ final class EloquentNucleoRepository implements NucleoRepository
             NucleoModel::query()->where('ncl_uuid', $id->valor())->delete();
         } catch (QueryException $e) {
             if (stripos($e->getMessage(), 'foreign key') !== false) {
-                throw new NucleoEmUsoException();
+                throw new NucleoEmUsoException;
             }
 
             throw $e;

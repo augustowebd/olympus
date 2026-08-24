@@ -7,10 +7,10 @@ namespace App\Presentation\Http\Producao\Contracts;
 final class GalpaoPayload
 {
     public const string NOME = 'nome';
+
     public const string CAPACIDADE = 'capacidade';
+
     public const string NCL_UUID = 'ncl_uuid';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }

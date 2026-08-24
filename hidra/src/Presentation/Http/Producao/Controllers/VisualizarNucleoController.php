@@ -11,10 +11,9 @@ final readonly class VisualizarNucleoController
 {
     public function __construct(
         private VisualizarNucleo $visualizarNucleo,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(string $nclUuid): NucleoResource
+        public function __invoke(string $nclUuid): NucleoResource
     {
         return NucleoResource::make($this->visualizarNucleo->executar($nclUuid));
     }

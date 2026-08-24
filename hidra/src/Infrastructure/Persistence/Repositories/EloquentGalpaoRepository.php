@@ -19,7 +19,7 @@ final class EloquentGalpaoRepository implements GalpaoRepository
             ->first();
 
         if ($nucleo === null) {
-            throw new NucleoNaoEncontradoException();
+            throw new NucleoNaoEncontradoException;
         }
 
         GalpaoModel::query()->updateOrCreate(

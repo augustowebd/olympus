@@ -1,0 +1,924 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hidra API",
+        "description": "API central de regras de negócio do ecossistema Granja.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "Hidra"
+        }
+    ],
+    "paths": {
+        "/v1/autenticacoes/argos": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Autentica um usuário do Argos e emite um token de acesso",
+                "operationId": "054fa47e8c09f9d756393873bda17758",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Autenticado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "nome": {
+                                                    "type": "string"
+                                                },
+                                                "eh_administrador": {
+                                                    "type": "boolean"
+                                                },
+                                                "permissoes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuário sem acesso ao Argos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Credenciais inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/{tipo}/{proprietarioUuid}/enderecos": {
+            "get": {
+                "tags": [
+                    "Endereços"
+                ],
+                "summary": "Lista os endereços de um colaborador, fornecedor ou cliente",
+                "operationId": "9d096fe174d7e233e3375e083a05978e",
+                "parameters": [
+                    {
+                        "name": "tipo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "colaborador",
+                                "fornecedor",
+                                "cliente"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "proprietarioUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de endereços",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Endereco"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Endereços"
+                ],
+                "summary": "Cria um endereço para um colaborador, fornecedor ou cliente",
+                "operationId": "87c710c9aa894dfa519b2ccf6fab7b26",
+                "parameters": [
+                    {
+                        "name": "tipo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "colaborador",
+                                "fornecedor",
+                                "cliente"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "proprietarioUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cep",
+                                    "logradouro",
+                                    "numero",
+                                    "bairro",
+                                    "pais_uuid",
+                                    "uf_uuid",
+                                    "cidade_uuid"
+                                ],
+                                "properties": {
+                                    "cep": {
+                                        "type": "string"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "complemento": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 255
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "pais_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "uf_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "cidade_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Endereço criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Endereco"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/enderecos/{endUuid}": {
+            "get": {
+                "tags": [
+                    "Endereços"
+                ],
+                "summary": "Consulta um endereço",
+                "operationId": "7411a3e0122236602e3c3f1d29f6b5c5",
+                "parameters": [
+                    {
+                        "name": "endUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Endereço encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Endereco"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Endereço não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Endereços"
+                ],
+                "summary": "Altera um endereço",
+                "operationId": "5a12bcfa1af435222d47bc4fd898dd7e",
+                "parameters": [
+                    {
+                        "name": "endUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cep",
+                                    "logradouro",
+                                    "numero",
+                                    "bairro",
+                                    "pais_uuid",
+                                    "uf_uuid",
+                                    "cidade_uuid"
+                                ],
+                                "properties": {
+                                    "cep": {
+                                        "type": "string"
+                                    },
+                                    "logradouro": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "numero": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "complemento": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 255
+                                    },
+                                    "bairro": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "pais_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "uf_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "cidade_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Endereço alterado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Endereco"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados inválidos ou endereço não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Endereços"
+                ],
+                "summary": "Remove um endereço",
+                "operationId": "0035939f5c86261f9d47cb2d4a51804d",
+                "parameters": [
+                    {
+                        "name": "endUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Endereço removido"
+                    },
+                    "422": {
+                        "description": "Endereço não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/nucleos/{nclUuid}": {
+            "get": {
+                "tags": [
+                    "Núcleos"
+                ],
+                "summary": "Consulta um núcleo de produção",
+                "operationId": "631ddb08f291c295eec06cf3f84d73dc",
+                "parameters": [
+                    {
+                        "name": "nclUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Núcleo encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Nucleo"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Núcleo não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Núcleos"
+                ],
+                "summary": "Altera um núcleo de produção",
+                "operationId": "f4c20e68516d08c8a82e7b7a57b5a4e2",
+                "parameters": [
+                    {
+                        "name": "nclUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Núcleo alterado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Nucleo"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Nome inválido, duplicado ou núcleo não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Núcleos"
+                ],
+                "summary": "Remove um núcleo de produção",
+                "operationId": "571a805d68d620a584bf45660a6159f8",
+                "parameters": [
+                    {
+                        "name": "nclUuid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Núcleo removido"
+                    },
+                    "422": {
+                        "description": "Núcleo não encontrado ou em uso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/nucleos": {
+            "get": {
+                "tags": [
+                    "Núcleos"
+                ],
+                "summary": "Lista os núcleos de produção",
+                "operationId": "4202473b13c528aaafca7419fbaf2705",
+                "responses": {
+                    "200": {
+                        "description": "Lista de núcleos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Nucleo"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Núcleos"
+                ],
+                "summary": "Cria um núcleo de produção",
+                "operationId": "e968f2956cb39deafd260ded9ca24a3e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Núcleo criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Nucleo"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Nome inválido ou duplicado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/v1/galpoes": {
+            "post": {
+                "tags": [
+                    "Galpões"
+                ],
+                "summary": "Registra um galpão em um núcleo de produção",
+                "operationId": "3deabfd4e12794de060f4a9065248ec5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "capacidade",
+                                    "ncl_uuid"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "capacidade": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "ncl_uuid": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Galpão registrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Galpao"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados inválidos ou núcleo não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroNegocio"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErroNegocio": {
+                "properties": {
+                    "error": {
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ErroValidacao": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Endereco": {
+                "properties": {
+                    "end_uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "cep": {
+                        "type": "string"
+                    },
+                    "logradouro": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "string"
+                    },
+                    "complemento": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "bairro": {
+                        "type": "string"
+                    },
+                    "cidade_uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Galpao": {
+                "properties": {
+                    "glp_uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "capacidade": {
+                        "type": "integer"
+                    },
+                    "ncl_uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "OCUPADO",
+                            "DESOCUPADO",
+                            "VAZIO_SANITARIO"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "Nucleo": {
+                "properties": {
+                    "ncl_uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nome": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticação",
+            "description": "Autenticação"
+        },
+        {
+            "name": "Endereços",
+            "description": "Endereços"
+        },
+        {
+            "name": "Núcleos",
+            "description": "Núcleos"
+        },
+        {
+            "name": "Galpões",
+            "description": "Galpões"
+        }
+    ]
+}

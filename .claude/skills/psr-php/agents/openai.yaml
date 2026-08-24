@@ -1,0 +1,4 @@
+interface:
+  display_name: "PSR para PHP"
+  short_description: "Formata e revisa PHP conforme PSR-12"
+  default_prompt: "Use $psr-php para formatar e revisar este código PHP."

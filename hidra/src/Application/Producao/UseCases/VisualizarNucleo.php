@@ -13,15 +13,14 @@ final readonly class VisualizarNucleo
 {
     public function __construct(
         private NucleoRepository $nucleos,
-    ) {
-    }
+    ) {}
 
     public function executar(string $nucleoId): Nucleo
     {
         $nucleo = $this->nucleos->obterPorId(NucleoId::fromString($nucleoId));
 
         if ($nucleo === null) {
-            throw new NucleoNaoEncontradoException();
+            throw new NucleoNaoEncontradoException;
         }
 
         return $nucleo;

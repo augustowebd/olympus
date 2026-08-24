@@ -1,0 +1,4 @@
+interface:
+  display_name: "Padrão visual de campos"
+  short_description: "Aplica estados visuais a campos de formulário"
+  default_prompt: "Use $padrao-visual-campos para criar ou ajustar campos de formulário."

@@ -18,8 +18,7 @@ final readonly class AlterarNucleo
     public function __construct(
         private NucleoRepository $nucleos,
         private UnidadeDeTrabalho $unidadeDeTrabalho,
-    ) {
-    }
+    ) {}
 
     public function executar(AlterarNucleoDto $dto): Nucleo
     {
@@ -28,13 +27,13 @@ final readonly class AlterarNucleo
             $nucleo = $this->nucleos->obterPorId($id);
 
             if ($nucleo === null) {
-                throw new NucleoNaoEncontradoException();
+                throw new NucleoNaoEncontradoException;
             }
 
             $nome = Nome::deTexto($dto->nome);
 
             if ($this->nucleos->existeComNome($nome->valor(), ignorando: $id)) {
-                throw new NucleoNomeDuplicadoException();
+                throw new NucleoNomeDuplicadoException;
             }
 
             $nucleo = $nucleo->renomear($nome);

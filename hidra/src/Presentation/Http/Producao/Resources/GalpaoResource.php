@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presentation\Http\Producao\Resources;
 
 use App\Domain\Producao\Entities\Galpao;
+use App\Domain\Producao\Enums\StatusGalpao;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

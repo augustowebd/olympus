@@ -8,6 +8,13 @@ TableGroup pessoas {
   colaboradores
   fornecedores
   clientes
+  pessoas.paises
+  pessoas.ufs
+  pessoas.cidades
+  pessoas.enderecos
+  pessoas.colaboradores_enderecos
+  pessoas.fornecedores_enderecos
+  pessoas.clientes_enderecos
 }
 
 Table users {
@@ -52,6 +59,65 @@ Table clientes {
   updated_at timestamp
 
   note: 'Usuário que é cliente da granja.'
+}
+
+Table pessoas.paises {
+  id integer [pk, increment, note: 'uso interno, nunca exposto']
+  pas_uuid uuid [unique, not null, note: 'identificador publico']
+  nome varchar [not null]
+  sigla varchar [not null, unique, note: 'codigo ISO 3166-1 alpha-2']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pessoas.ufs {
+  id integer [pk, increment, note: 'uso interno, nunca exposto']
+  est_uuid uuid [unique, not null, note: 'identificador publico']
+  pais_id integer [not null, ref: > pessoas.paises.id]
+  nome varchar [not null]
+  sigla varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pessoas.cidades {
+  id integer [pk, increment, note: 'uso interno, nunca exposto']
+  cid_uuid uuid [unique, not null, note: 'identificador publico']
+  uf_id integer [not null, ref: > pessoas.ufs.id]
+  nome varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pessoas.enderecos {
+  id integer [pk, increment, note: 'uso interno, nunca exposto']
+  end_uuid uuid [unique, not null, note: 'identificador publico']
+  cep varchar [not null]
+  logradouro varchar [not null]
+  numero varchar [not null]
+  complemento varchar [null]
+  bairro varchar [not null]
+  cidade_id integer [not null, ref: > pessoas.cidades.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pessoas.colaboradores_enderecos {
+  colaborador_id uuid [not null, ref: > colaboradores.id]
+  endereco_id integer [not null, ref: > pessoas.enderecos.id]
+  indexes { (colaborador_id, endereco_id) [unique] }
+}
+
+Table pessoas.fornecedores_enderecos {
+  fornecedor_id uuid [not null, ref: > fornecedores.id]
+  endereco_id integer [not null, ref: > pessoas.enderecos.id]
+  indexes { (fornecedor_id, endereco_id) [unique] }
+}
+
+Table pessoas.clientes_enderecos {
+  cliente_id uuid [not null, ref: > clientes.id]
+  endereco_id integer [not null, ref: > pessoas.enderecos.id]
+  indexes { (cliente_id, endereco_id) [unique] }
 }
 
 TableGroup producao {

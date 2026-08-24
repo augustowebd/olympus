@@ -10,6 +10,5 @@ final readonly class RegistrarGalpaoDto
         public string $nome,
         public int $capacidade,
         public string $nucleoId,
-    ) {
-    }
+    ) {}
 }

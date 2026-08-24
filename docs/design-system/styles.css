@@ -2,3 +2,87 @@
 @import url('./tokens/typography.css');
 @import url('./tokens/spacing.css');
 @import url('./tokens/effects.css');
+
+/* Densidade padrão dos formulários administrativos. */
+.ds-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+.ds-campo__rotulo {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+}
+
+.ds-input::placeholder {
+  color: rgb(68 54 47 / 10%);
+  opacity: 1;
+}
+
+.ds-input,
+.ds-select {
+  min-height: 44px;
+  font-size: var(--text-sm);
+}
+
+.ds-select:invalid {
+  color: rgb(68 54 47 / 10%);
+}
+
+.ds-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+.ds-switch input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.ds-switch__trilho {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--n-300);
+  transition: background var(--duration-base) var(--ease-standard);
+}
+
+.ds-switch__trilho span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.ds-switch input:checked + .ds-switch__trilho {
+  background: var(--primary-600);
+}
+
+.ds-switch input:checked + .ds-switch__trilho span {
+  transform: translateX(16px);
+}
+
+.ds-switch input:focus-visible + .ds-switch__trilho {
+  outline: 3px solid var(--primary-100);
+  outline-offset: 2px;
+}
+
+.ds-switch__rotulo {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+}

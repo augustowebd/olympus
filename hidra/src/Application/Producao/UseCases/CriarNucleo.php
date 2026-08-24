@@ -19,8 +19,7 @@ final readonly class CriarNucleo
         private NucleoRepository $nucleos,
         private UnidadeDeTrabalho $unidadeDeTrabalho,
         private GeradorIdentificador $geradorIdentificador,
-    ) {
-    }
+    ) {}
 
     public function executar(CriarNucleoDto $dto): Nucleo
     {
@@ -28,7 +27,7 @@ final readonly class CriarNucleo
             $nome = Nome::deTexto($dto->nome);
 
             if ($this->nucleos->existeComNome($nome->valor())) {
-                throw new NucleoNomeDuplicadoException();
+                throw new NucleoNomeDuplicadoException;
             }
 
             $nucleo = Nucleo::registrar(

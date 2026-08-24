@@ -9,9 +9,7 @@ use InvalidArgumentException;
 
 final readonly class Nome
 {
-    private function __construct(private string $valor)
-    {
-    }
+    private function __construct(private string $valor) {}
 
     public static function deTexto(string $valor): self
     {

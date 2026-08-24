@@ -8,6 +8,5 @@ final readonly class CriarNucleoDto
 {
     public function __construct(
         public string $nome,
-    ) {
-    }
+    ) {}
 }

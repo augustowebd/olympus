@@ -26,7 +26,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
             $codigo = $e->codigo()->value;
 
             return new JsonResponse(
-                data: ['error' => ['code' => $codigo, 'message' => __('errors.' . $codigo)]],
+                data: ['error' => ['code' => $codigo, 'message' => __('errors.'.$codigo)]],
                 status: Response::HTTP_UNPROCESSABLE_ENTITY,
             );
         });
@@ -35,7 +35,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
             $codigo = $e->getMessage();
 
             return new JsonResponse(
-                data: ['error' => ['code' => $codigo, 'message' => __('errors.' . $codigo)]],
+                data: ['error' => ['code' => $codigo, 'message' => __('errors.'.$codigo)]],
                 status: Response::HTTP_UNPROCESSABLE_ENTITY,
             );
         });

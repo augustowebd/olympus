@@ -16,10 +16,9 @@ final readonly class RegistrarGalpaoController
 {
     public function __construct(
         private RegistrarGalpao $registrarGalpao,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(RegistrarGalpaoRequest $request): JsonResponse
+        public function __invoke(RegistrarGalpaoRequest $request): JsonResponse
     {
         $dados = $request->validated();
 

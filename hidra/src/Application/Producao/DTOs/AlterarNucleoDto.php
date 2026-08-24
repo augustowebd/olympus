@@ -9,6 +9,5 @@ final readonly class AlterarNucleoDto
     public function __construct(
         public string $nucleoId,
         public string $nome,
-    ) {
-    }
+    ) {}
 }

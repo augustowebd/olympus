@@ -14,8 +14,7 @@ final readonly class RemoverNucleo
     public function __construct(
         private NucleoRepository $nucleos,
         private UnidadeDeTrabalho $unidadeDeTrabalho,
-    ) {
-    }
+    ) {}
 
     public function executar(string $nucleoId): void
     {
@@ -23,7 +22,7 @@ final readonly class RemoverNucleo
             $id = NucleoId::fromString($nucleoId);
 
             if ($this->nucleos->obterPorId($id) === null) {
-                throw new NucleoNaoEncontradoException();
+                throw new NucleoNaoEncontradoException;
             }
 
             $this->nucleos->remover($id);

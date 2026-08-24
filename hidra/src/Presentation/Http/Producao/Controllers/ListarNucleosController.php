@@ -12,10 +12,9 @@ final readonly class ListarNucleosController
 {
     public function __construct(
         private ListarNucleos $listarNucleos,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(): AnonymousResourceCollection
+        public function __invoke(): AnonymousResourceCollection
     {
         return NucleoResource::collection($this->listarNucleos->executar());
     }

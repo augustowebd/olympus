@@ -27,7 +27,8 @@ final class GerenciarNucleoTest extends TestCase
 
     private function unidadeDeTrabalhoSemTransacao(): UnidadeDeTrabalho
     {
-        return new class implements UnidadeDeTrabalho {
+        return new class implements UnidadeDeTrabalho
+        {
             public function executar(callable $operacao): mixed
             {
                 return $operacao();
@@ -37,10 +38,9 @@ final class GerenciarNucleoTest extends TestCase
 
     private function geradorFixo(string $id): GeradorIdentificador
     {
-        return new class ($id) implements GeradorIdentificador {
-            public function __construct(private string $id)
-            {
-            }
+        return new class($id) implements GeradorIdentificador
+        {
+            public function __construct(private string $id) {}
 
             public function gerar(): string
             {
@@ -53,10 +53,9 @@ final class GerenciarNucleoTest extends TestCase
     {
         $salvo = null;
 
-        $repositorio = new class ($salvo) implements NucleoRepository {
-            public function __construct(private mixed &$salvo)
-            {
-            }
+        $repositorio = new class($salvo) implements NucleoRepository
+        {
+            public function __construct(private mixed &$salvo) {}
 
             public function salvar(Nucleo $nucleo): void
             {
@@ -78,9 +77,7 @@ final class GerenciarNucleoTest extends TestCase
                 return [];
             }
 
-            public function remover(NucleoId $id): void
-            {
-            }
+            public function remover(NucleoId $id): void {}
         };
 
         $useCase = new CriarNucleo(
@@ -100,10 +97,9 @@ final class GerenciarNucleoTest extends TestCase
         $this->expectException(NucleoNomeDuplicadoException::class);
 
         $useCase = new CriarNucleo(
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -120,9 +116,7 @@ final class GerenciarNucleoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
             unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
             geradorIdentificador: $this->geradorFixo(self::NUCLEO_ID),
@@ -136,14 +130,11 @@ final class GerenciarNucleoTest extends TestCase
         $esperado = [Nucleo::registrar(NucleoId::fromString(self::NUCLEO_ID), Nome::deTexto('Núcleo Central'))];
 
         $useCase = new ListarNucleos(
-            nucleos: new class ($esperado) implements NucleoRepository {
-                public function __construct(private array $lista)
-                {
-                }
+            nucleos: new class($esperado) implements NucleoRepository
+            {
+                public function __construct(private array $lista) {}
 
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -160,9 +151,7 @@ final class GerenciarNucleoTest extends TestCase
                     return $this->lista;
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
         );
 
@@ -174,10 +163,9 @@ final class GerenciarNucleoTest extends TestCase
         $this->expectException(NucleoNaoEncontradoException::class);
 
         $useCase = new VisualizarNucleo(
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -194,9 +182,7 @@ final class GerenciarNucleoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
         );
 
@@ -208,10 +194,9 @@ final class GerenciarNucleoTest extends TestCase
         $salvo = null;
 
         $useCase = new AlterarNucleo(
-            nucleos: new class ($salvo) implements NucleoRepository {
-                public function __construct(private mixed &$salvo)
-                {
-                }
+            nucleos: new class($salvo) implements NucleoRepository
+            {
+                public function __construct(private mixed &$salvo) {}
 
                 public function salvar(Nucleo $nucleo): void
                 {
@@ -233,9 +218,7 @@ final class GerenciarNucleoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
             unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
         );
@@ -250,10 +233,9 @@ final class GerenciarNucleoTest extends TestCase
         $this->expectException(NucleoNomeDuplicadoException::class);
 
         $useCase = new AlterarNucleo(
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -270,9 +252,7 @@ final class GerenciarNucleoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
             unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
         );
@@ -285,14 +265,11 @@ final class GerenciarNucleoTest extends TestCase
         $ignoradoRecebido = null;
 
         $useCase = new AlterarNucleo(
-            nucleos: new class ($ignoradoRecebido) implements NucleoRepository {
-                public function __construct(private mixed &$ignoradoRecebido)
-                {
-                }
+            nucleos: new class($ignoradoRecebido) implements NucleoRepository
+            {
+                public function __construct(private mixed &$ignoradoRecebido) {}
 
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -311,9 +288,7 @@ final class GerenciarNucleoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
             unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
         );
@@ -328,10 +303,9 @@ final class GerenciarNucleoTest extends TestCase
         $this->expectException(NucleoNaoEncontradoException::class);
 
         $useCase = new RemoverNucleo(
-            nucleos: new class implements NucleoRepository {
-                public function salvar(Nucleo $nucleo): void
-                {
-                }
+            nucleos: new class implements NucleoRepository
+            {
+                public function salvar(Nucleo $nucleo): void {}
 
                 public function obterPorId(NucleoId $id): ?Nucleo
                 {
@@ -348,9 +322,7 @@ final class GerenciarNucleoTest extends TestCase
                     return [];
                 }
 
-                public function remover(NucleoId $id): void
-                {
-                }
+                public function remover(NucleoId $id): void {}
             },
             unidadeDeTrabalho: $this->unidadeDeTrabalhoSemTransacao(),
         );

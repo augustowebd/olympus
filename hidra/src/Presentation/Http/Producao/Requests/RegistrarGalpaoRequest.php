@@ -19,7 +19,7 @@ final class RegistrarGalpaoRequest extends FormRequest
     {
         return [
             GalpaoPayload::NOME => ['required', 'string', 'max:255'],
-            GalpaoPayload::CAPACIDADE => ['required', 'integer', 'min:' . Capacidade::MINIMA],
+            GalpaoPayload::CAPACIDADE => ['required', 'integer', 'min:'.Capacidade::MINIMA],
             GalpaoPayload::NCL_UUID => ['required', 'uuid'],
         ];
     }

@@ -6,9 +6,7 @@ namespace App\Domain\Pessoas\ValueObjects;
 
 final readonly class FornecedorId
 {
-    private function __construct(private string $valor)
-    {
-    }
+    private function __construct(private string $valor) {}
 
     public static function fromString(string $valor): self
     {

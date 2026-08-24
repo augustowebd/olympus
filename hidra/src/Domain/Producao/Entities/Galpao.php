@@ -20,8 +20,7 @@ final readonly class Galpao
         private Capacidade $capacidade,
         private NucleoId $nucleoId,
         private StatusGalpao $status,
-    ) {
-    }
+    ) {}
 
     public static function registrar(
         GalpaoId $id,

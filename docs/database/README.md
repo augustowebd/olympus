@@ -50,6 +50,8 @@ MER completo em [`erd.dbml`](./erd.dbml) — DBML (padrão dbdiagram.io), colar 
 
 Essa hierarquia de dados é espelhada nas classes de domínio: `Domain\Pessoas\Entities\Usuario` é a base, e `Colaborador`, `Fornecedor` e `Cliente` estendem `Usuario` (`src/Domain/Pessoas/Entities`).
 
+Endereços ficam no schema `pessoas` e são compartilhados por meio de tabelas de ligação explícitas: `colaboradores_enderecos`, `fornecedores_enderecos` e `clientes_enderecos`. A localização é normalizada em `paises → ufs → cidades`; o endereço referencia somente a cidade, da qual UF e país são obtidos. As views `vw_colaborador_endereco`, `vw_fornecedor_endereco` e `vw_cliente_endereco` entregam a leitura completa sem expor IDs internos.
+
 ### Producao
 
 Schema `producao`. Um `nucleo` é o local físico onde um ou mais `galpao` (galpão) ficam localizados; todo galpão pertence a exatamente um núcleo.

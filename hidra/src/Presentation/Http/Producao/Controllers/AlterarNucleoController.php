@@ -14,10 +14,9 @@ final readonly class AlterarNucleoController
 {
     public function __construct(
         private AlterarNucleo $alterarNucleo,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(AlterarNucleoRequest $request, string $nclUuid): NucleoResource
+        public function __invoke(AlterarNucleoRequest $request, string $nclUuid): NucleoResource
     {
         $dados = $request->validated();
 

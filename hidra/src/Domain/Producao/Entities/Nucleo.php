@@ -12,8 +12,7 @@ final readonly class Nucleo
     private function __construct(
         private NucleoId $id,
         private Nome $nome,
-    ) {
-    }
+    ) {}
 
     public static function registrar(NucleoId $id, Nome $nome): self
     {
